@@ -4,18 +4,131 @@
  */
 package main;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import util.*;
+
 /**
  *
  * @author Pete
  */
 public class AddGame extends javax.swing.JPanel {
 
+    Game game;
+    
     /**
      * Creates new form Order
      */
     public AddGame() {
         initComponents();
+        updateCB();
+        setTableSelection();
+    }
+    
+    private void updateCB() {
+        cbCategory.setModel(new ModelCombox().getModel("category", "category_name"));
+        cbAddCategory.setModel(new ModelCombox().getModel("category", "category_name"));
+        cbDesCategory.setModel(new ModelCombox().getModel("category", "category_name"));
+    }
+    
+    public void setGameData() {
+        try{
+            
+            int row = tblStock.getSelectedRow();
+            
+            String game_id = tblStock.getValueAt(row, 0).toString();
+            
+            game = new GameDA().getGameData(game_id);
+            
+            txtDesId.setText(game.getId());
+            txtDesName.setText(game.getName());
+            txtADescription.setText(game.getDes());
+            txtDesStatus.setText(game.getStatus());
+            txtDesQuantity.setText(game.getQuantity()+"");
+            cbDesCategory.setSelectedIndex(game.getCatId());
+            txtDesPrice.setText(new DecimalFormat(",###.00").format(game.getPrice()));
+            
+        }catch(Exception e) {
+            JOptionPane.showMessageDialog(null, "Something Wrong", "Warning", JOptionPane.ERROR_MESSAGE);
+//            e.printStackTrace();
+        }
+    }
+    
+    public void updateGameData() {
+        game.setId(txtDesId.getText());
+        game.setName(txtDesName.getText());
+        game.setDes(txtAAddDescription.getText());
+        game.setCatId(cbDesCategory.getSelectedIndex());
+        game.setStatus(txtDesStatus.getText());
+        game.setQuantity(Integer.parseInt(txtDesQuantity.getText()));
+        game.setPrice(Double.parseDouble(txtDesPrice.getText()));
         
+    }
+    
+    private void clearGameData() {
+        game = null;
+        txtDesId.setText("");
+        txtDesName.setText("");
+        txtADescription.setText("");
+        txtDesQuantity.setText("");
+        txtDesStatus.setText("");
+        txtDesPrice.setText("");
+        cbDesCategory.setSelectedIndex(0);
+    }
+    
+    private void lockGameData() {
+        txtDesId.setEnabled(false);
+        txtDesName.setEnabled(false);
+        txtADescription.setEnabled(false);
+        txtDesQuantity.setEnabled(false);
+        txtDesStatus.setEnabled(false);
+        txtDesPrice.setEnabled(false);
+        cbDesCategory.setEnabled(false);
+    }
+    
+    private void unlockGameData() {
+        txtDesId.setEnabled(true);
+        txtDesName.setEnabled(true);
+        txtADescription.setEnabled(true);
+        txtDesQuantity.setEnabled(true);
+        txtDesStatus.setEnabled(true);
+        txtDesPrice.setEnabled(true);
+        cbDesCategory.setEnabled(true);
+    }
+    
+    private void searchGame() {
+        ArrayList<Object> data = new ArrayList<>();
+        String sql = "";
+        
+        if(cbCategory.getSelectedItem() != null) {
+            sql += " AND category_name= ?";
+            data.add(cbCategory.getSelectedItem().toString());
+        }
+        if(!txtSearch.getText().isBlank()) {
+            sql += " AND Game_ID= ?";
+            data.add(txtSearch.getText());
+        }
+
+        Object[] aData = new Object[]{sql,data};
+        
+        if(sql.isBlank()) {
+            tblStock.setModel(new GameTable().getModel(null));
+        }else {
+            tblStock.setModel(new GameTable().getModel(aData));
+        }
+
+    }
+    
+    private void setTableSelection() {
+        tblStock.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent evt) {
+                stockSelectionPerformed(evt);
+            }
+        });
     }
 
     /**
@@ -339,6 +452,7 @@ public class AddGame extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblStock.setModel(new GameTable().getModel(null));
         tblStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblStock.getTableHeader().setReorderingAllowed(false);
@@ -354,13 +468,27 @@ public class AddGame extends javax.swing.JPanel {
         lbSearch.setText("Search :");
 
         txtSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtSearch.setText("id");
+        txtSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchActionPerformed(evt);
+            }
+        });
 
         btnSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSearch.setText("Serach");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         cbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCategoryActionPerformed(evt);
+            }
+        });
 
         lbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbCategory.setText("Category :");
@@ -428,6 +556,37 @@ public class AddGame extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoryActionPerformed
+        searchGame();
+        clearGameData();
+        lockGameData();
+    }//GEN-LAST:event_cbCategoryActionPerformed
+
+    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
+        searchGame();
+        clearGameData();
+        lockGameData();
+    }//GEN-LAST:event_txtSearchActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        searchGame();
+        clearGameData();
+        lockGameData();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    
+    private void stockSelectionPerformed(ListSelectionEvent evt) {
+        try{
+        if (!evt.getValueIsAdjusting()) {
+            int selectedRow = tblStock.getSelectedRow();
+            if (selectedRow != -1) {
+                setGameData();
+            }
+        }
+        }catch(IndexOutOfBoundsException e) {
+//            e.printStackTrace();
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AddPane;

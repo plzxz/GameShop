@@ -4,6 +4,10 @@
  */
 package main;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import util.*;
+
 /**
  *
  * @author Pete
@@ -15,8 +19,60 @@ public class ViewReport extends javax.swing.JPanel {
      */
     public ViewReport() {
         initComponents();
-        
+        UpdateTotal();
     }
+    
+    public void updateTable() {
+        tblReport.setModel(new ReportTable().getModel(null));
+        cbCategory.setModel(new ModelCombox().getModel("category", "category_name"));
+        UpdateTotal();
+    }
+    
+    public void UpdateTotal() {
+        int rowCount = tblReport.getRowCount();
+        txtRowCount.setText(rowCount+"");
+        double total = 0;
+        for(int i = 0; i<rowCount ; i++) {
+            total += Double.parseDouble(tblReport.getValueAt(i, 6).toString());
+        }
+        txtTotal.setText(new DecimalFormat(",###.00").format(total));
+    }
+    
+    private void checkSearch() {
+        String sql = "";
+        ArrayList<Object> data = new ArrayList<>();
+        
+        if(cbCategory.getSelectedItem() != null) {
+            sql += " AND category_name= ?";
+            data.add(cbCategory.getSelectedItem().toString());
+        }
+        if(!txtGameID.getText().isBlank()) {
+            sql += " AND Game_ID= ?";
+            data.add(txtGameID.getText());
+        }
+        if(!txtEmployeeID.getText().isBlank()) {
+            sql += " AND Emp_ID= ?";
+            data.add(txtEmployeeID.getText());
+        }
+        if(!txtMemberID.getText().isBlank()) {
+            sql += " AND Customer_ID= ?";
+            data.add(txtMemberID.getText());
+        }
+        if(datePicker.getDate() != null) {
+            sql += " AND Dill_Date= ?";
+            data.add(java.sql.Date.valueOf(datePicker.getDate()));
+        }
+        
+        Object[] aData = new Object[]{sql,data};
+        
+        if(sql.isBlank()) {
+            tblReport.setModel(new ReportTable().getModel(null));
+        }else {
+            tblReport.setModel(new ReportTable().getModel(aData));
+        }
+        UpdateTotal();
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,7 +98,7 @@ public class ViewReport extends javax.swing.JPanel {
         cbCategory = new javax.swing.JComboBox<>();
         lbCategory = new javax.swing.JLabel();
         lbGameName = new javax.swing.JLabel();
-        txtGameName = new javax.swing.JTextField();
+        txtEmployeeID = new javax.swing.JTextField();
         lbMemberID = new javax.swing.JLabel();
         txtMemberID = new javax.swing.JTextField();
         datePicker = new com.github.lgooddatepicker.components.DatePicker();
@@ -104,6 +160,7 @@ public class ViewReport extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblReport.setModel(new ReportTable().getModel(null));
         tblReport.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblReport.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblReport.getTableHeader().setReorderingAllowed(false);
@@ -119,25 +176,51 @@ public class ViewReport extends javax.swing.JPanel {
         lbGameID.setText("Game ID :");
 
         txtGameID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtGameID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtGameIDActionPerformed(evt);
+            }
+        });
 
         btnSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSearch.setText("Serach");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         cbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategory.setModel(new ModelCombox().getModel("category", "category_name"));
+        cbCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCategoryActionPerformed(evt);
+            }
+        });
 
         lbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbCategory.setText("Category :");
 
         lbGameName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lbGameName.setText("Game Name :");
+        lbGameName.setText("Employee ID : ");
 
-        txtGameName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEmployeeID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEmployeeID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmployeeIDActionPerformed(evt);
+            }
+        });
 
         lbMemberID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbMemberID.setText("Member ID :");
 
         txtMemberID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtMemberID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMemberIDActionPerformed(evt);
+            }
+        });
 
         lbDate.setText("Date :");
         lbDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -164,7 +247,7 @@ public class ViewReport extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(lbGameName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtGameName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtEmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lbMemberID)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -173,7 +256,7 @@ public class ViewReport extends javax.swing.JPanel {
                         .addComponent(lbDate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)))
                 .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50))
         );
@@ -190,7 +273,7 @@ public class ViewReport extends javax.swing.JPanel {
                     .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbCategory)
                     .addComponent(lbGameName)
-                    .addComponent(txtGameName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbMemberID)
                     .addComponent(txtMemberID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -217,6 +300,26 @@ public class ViewReport extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoryActionPerformed
+        checkSearch();
+    }//GEN-LAST:event_cbCategoryActionPerformed
+
+    private void txtGameIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGameIDActionPerformed
+        checkSearch();
+    }//GEN-LAST:event_txtGameIDActionPerformed
+
+    private void txtEmployeeIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmployeeIDActionPerformed
+        checkSearch();
+    }//GEN-LAST:event_txtEmployeeIDActionPerformed
+
+    private void txtMemberIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMemberIDActionPerformed
+        checkSearch();
+    }//GEN-LAST:event_txtMemberIDActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        checkSearch();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel DescriptionPane;
@@ -234,8 +337,8 @@ public class ViewReport extends javax.swing.JPanel {
     private javax.swing.JLabel lbRow;
     private javax.swing.JLabel lbTotal;
     private javax.swing.JTable tblReport;
+    private javax.swing.JTextField txtEmployeeID;
     private javax.swing.JTextField txtGameID;
-    private javax.swing.JTextField txtGameName;
     private javax.swing.JTextField txtMemberID;
     private javax.swing.JTextField txtRowCount;
     private javax.swing.JTextField txtTotal;

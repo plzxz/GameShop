@@ -4,18 +4,139 @@
  */
 package main;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import util.*;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+
 /**
  *
  * @author Pete
  */
 public class AddOrder extends javax.swing.JPanel {
 
+    Game game;
     /**
      * Creates new form Order
      */
     public AddOrder() {
         initComponents();
+        setTableSelection();
+    }
+    
+    public void setGameData() {
+        try{
+            
+            int row = tblStock.getSelectedRow();
+            
+            String game_id = tblStock.getValueAt(row, 0).toString();
+            
+            game = new GameDA().getGameData(game_id);
+            
+            txtDesId.setText(game.getId());
+            txtDesName.setText(game.getName());
+            txtADescription.setText(game.getDes());
+            txtDesStatus.setText(game.getStatus());
+            txtDesQuantity.setText(game.getQuantity()+"");
+            txtDesPrice.setText(new DecimalFormat(",###.00").format(game.getPrice()));
+            txtCartQuantity.setText("0");
+            
+            checkQuantity();
+        }catch(Exception e) {
+            JOptionPane.showMessageDialog(null, "Something Wrong", "Warning", JOptionPane.ERROR_MESSAGE);
+//            e.printStackTrace();
+        }
+    }
+    
+    public void update() {
+        cbCategory.setModel(new ModelCombox().getModel("category","category_name"));
+    }
+    
+    public void clearGameData() {
+        txtDesId.setText("");
+        txtDesName.setText("");
+        txtADescription.setText("");
+        txtDesStatus.setText("");
+        txtDesQuantity.setText("");
+        txtDesPrice.setText("");
+        txtCartQuantity.setText("");
+        cartQA = 0;
+    }
+    
+    public void checkQuantity() {
+        String gStat = game.getStatus();
+        if(gStat.equalsIgnoreCase("Unavailable")) {
+            txtCartQuantity.setEnabled(false);
+            btnCartAdd.setEnabled(false);
+            btnCartPlus.setEnabled(false);
+            btnCartMinus.setEnabled(false);
+            txtCartQuantity.setText("");
+            cartQA = 0;
+        }else {
+            txtCartQuantity.setEnabled(true);
+            btnCartAdd.setEnabled(true);
+            btnCartPlus.setEnabled(true);
+            btnCartMinus.setEnabled(true);
+        }
+    }
+    
+    public void unlockQuantity() {
+        txtCartQuantity.setEnabled(true);
+        btnCartAdd.setEnabled(true);
+        btnCartPlus.setEnabled(true);
+        btnCartMinus.setEnabled(true);
+    }
+    
+    
+    private void searchGame() {
+        ArrayList<Object> data = new ArrayList<>();
+        String sql = "";
         
+        if(cbCategory.getSelectedItem() != null) {
+            sql += " AND category_name= ?";
+            data.add(cbCategory.getSelectedItem().toString());
+        }
+        if(!txtSearch.getText().isBlank()) {
+            sql += " AND Game_ID= ?";
+            data.add(txtSearch.getText());
+        }
+
+        Object[] aData = new Object[]{sql,data};
+        
+        if(sql.isBlank()) {
+            tblStock.setModel(new GameTable().getModel(null));
+        }else {
+            tblStock.setModel(new GameTable().getModel(aData));
+        }
+
+    }
+    
+    
+    private void setTableSelection() {
+        tblStock.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent evt) {
+                stockSelectionPerformed(evt);
+            }
+        });
+        
+//        tblCart.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+//            @Override
+//            public void valueChanged(ListSelectionEvent evt) {
+//                cartSelectionPerformed(evt);
+//            }
+//        });
+    }
+    
+    private boolean isNumber(String str) {
+        if(str.matches("\\d+")) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -42,6 +163,8 @@ public class AddOrder extends javax.swing.JPanel {
         btnCartPrint = new javax.swing.JButton();
         btnCartProcess = new javax.swing.JButton();
         btnCartClear = new javax.swing.JButton();
+        txtCartTotal = new javax.swing.JTextField();
+        lbCartTotal = new javax.swing.JLabel();
         DescriptionPane = new javax.swing.JPanel();
         lbDesName = new javax.swing.JLabel();
         txtDesName = new javax.swing.JTextField();
@@ -73,15 +196,23 @@ public class AddOrder extends javax.swing.JPanel {
 
         tblCart.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3"
+                "Game id", "Game Name", "Quantity", "price"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         tblCart.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblCart.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblCart.getTableHeader().setReorderingAllowed(false);
@@ -92,12 +223,27 @@ public class AddOrder extends javax.swing.JPanel {
         lbCartQuantity.setText("Quantity :");
 
         txtCartQuantity.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtCartQuantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCartQuantityActionPerformed(evt);
+            }
+        });
 
         btnCartPlus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartPlus.setText("+");
+        btnCartPlus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartPlusActionPerformed(evt);
+            }
+        });
 
         btnCartMinus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartMinus.setText("-");
+        btnCartMinus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartMinusActionPerformed(evt);
+            }
+        });
 
         btnCartAdd.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartAdd.setText("Add");
@@ -122,44 +268,61 @@ public class AddOrder extends javax.swing.JPanel {
         btnCartClear.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartClear.setText("Clear");
 
+        txtCartTotal.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtCartTotal.setEditable(false);
+
+        lbCartTotal.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbCartTotal.setText("Total : ");
+
         javax.swing.GroupLayout CartPaneLayout = new javax.swing.GroupLayout(CartPane);
         CartPane.setLayout(CartPaneLayout);
         CartPaneLayout.setHorizontalGroup(
             CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(CartPaneLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(CartPaneLayout.createSequentialGroup()
-                        .addComponent(lbCartMember)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtCartMember))
+                        .addGap(46, 46, 46)
+                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(CartPaneLayout.createSequentialGroup()
+                                .addComponent(lbCartMember)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtCartMember))
+                            .addGroup(CartPaneLayout.createSequentialGroup()
+                                .addComponent(btnCartAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCartRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(CartPaneLayout.createSequentialGroup()
+                                .addComponent(lbCartQuantity)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCartQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCartPlus)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCartMinus))
+                            .addGroup(CartPaneLayout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnCartPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnCartMember, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnCartProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnCartClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(CartPaneLayout.createSequentialGroup()
-                        .addComponent(btnCartAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCartRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(CartPaneLayout.createSequentialGroup()
-                        .addComponent(lbCartQuantity)
+                        .addContainerGap()
+                        .addComponent(lbCartTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCartQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCartPlus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCartMinus))
-                    .addGroup(CartPaneLayout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnCartPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCartMember, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCartProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnCartClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txtCartTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(67, Short.MAX_VALUE))
         );
         CartPaneLayout.setVerticalGroup(
             CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CartPaneLayout.createSequentialGroup()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbCartTotal)
+                    .addComponent(txtCartTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48)
                 .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbCartQuantity)
                     .addComponent(txtCartQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -297,6 +460,7 @@ public class AddOrder extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblStock.setModel(new GameTable().getModel(null));
         tblStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblStock.getTableHeader().setReorderingAllowed(false);
@@ -312,13 +476,28 @@ public class AddOrder extends javax.swing.JPanel {
         lbSearch.setText("Search :");
 
         txtSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtSearch.setText("id");
+        txtSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchActionPerformed(evt);
+            }
+        });
 
         btnSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSearch.setText("Serach");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         cbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategory.setModel(new ModelCombox().getModel("category","category_name"));
+        cbCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCategoryActionPerformed(evt);
+            }
+        });
 
         lbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbCategory.setText("Category :");
@@ -386,6 +565,95 @@ public class AddOrder extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        clearGameData();
+        searchGame();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
+        clearGameData();
+        searchGame();
+    }//GEN-LAST:event_txtSearchActionPerformed
+
+    private void cbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoryActionPerformed
+        clearGameData();
+        searchGame();
+    }//GEN-LAST:event_cbCategoryActionPerformed
+
+    int cartQA = 0;
+    private void txtCartQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCartQuantityActionPerformed
+        if(isNumber(txtCartQuantity.getText())&& game!= null) {
+            int cartQ = Integer.parseInt(txtCartQuantity.getText());
+            if(cartQ>=game.getQuantity()) {
+                JOptionPane.showMessageDialog(CartPane, "Out of stock.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                txtCartQuantity.setText(cartQA+"");
+            }else {
+                cartQA = cartQ;
+                txtCartQuantity.setText(cartQ+"");
+                btnCartPlus.setEnabled(true);
+            }
+        }else {
+            txtCartQuantity.setText("0");
+        }
+    }//GEN-LAST:event_txtCartQuantityActionPerformed
+
+    private void btnCartPlusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartPlusActionPerformed
+        if(isNumber(txtCartQuantity.getText())&& game!= null) {
+            int cartQ = Integer.parseInt(txtCartQuantity.getText()) + 1;
+            if(cartQ>=game.getQuantity()) {
+                JOptionPane.showMessageDialog(CartPane, "Out of stock.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                btnCartPlus.setEnabled(false);
+            }else {
+                cartQA = cartQ;
+                txtCartQuantity.setText(cartQ+"");
+                btnCartPlus.setEnabled(true);
+            }
+        }else {
+            txtCartQuantity.setText("0");
+        }
+    }//GEN-LAST:event_btnCartPlusActionPerformed
+
+    private void btnCartMinusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartMinusActionPerformed
+        if(isNumber(txtCartQuantity.getText())&& game!= null) {
+            int cartQ = Integer.parseInt(txtCartQuantity.getText()) - 1;
+            if(cartQ>=game.getQuantity()) {
+                JOptionPane.showMessageDialog(CartPane, "Out of stock.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                btnCartPlus.setEnabled(false);
+            }else {
+                cartQA = cartQ;
+                txtCartQuantity.setText(cartQ+"");
+                btnCartPlus.setEnabled(true);
+            }
+        }else {
+            txtCartQuantity.setText("0");
+        }
+    }//GEN-LAST:event_btnCartMinusActionPerformed
+
+    
+    
+    
+    private void stockSelectionPerformed(ListSelectionEvent evt) {
+        try{
+        if (!evt.getValueIsAdjusting()) {
+            int selectedRow = tblStock.getSelectedRow();
+            if (selectedRow != -1) {
+                setGameData();
+            }
+        }
+        }catch(IndexOutOfBoundsException e) {
+//            e.printStackTrace();
+        }
+    }
+    
+//    private void cartSelectionPerformed(ListSelectionEvent evt) {
+//        if (!evt.getValueIsAdjusting()) {
+//            int selectedRow = tblCart.getSelectedRow();
+//            if (selectedRow != -1) {
+//                
+//            }
+//        }
+//    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CartPane;
@@ -406,6 +674,7 @@ public class AddOrder extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbCartMember;
     private javax.swing.JLabel lbCartQuantity;
+    private javax.swing.JLabel lbCartTotal;
     private javax.swing.JLabel lbCategory;
     private javax.swing.JLabel lbDesDescription;
     private javax.swing.JLabel lbDesId;
@@ -420,6 +689,7 @@ public class AddOrder extends javax.swing.JPanel {
     private javax.swing.JTextArea txtADescription;
     private javax.swing.JTextField txtCartMember;
     private javax.swing.JTextField txtCartQuantity;
+    private javax.swing.JTextField txtCartTotal;
     private javax.swing.JTextField txtDesId;
     private javax.swing.JTextField txtDesName;
     private javax.swing.JTextField txtDesPrice;
