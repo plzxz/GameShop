@@ -5,7 +5,7 @@
 package main;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import javax.swing.JLayeredPane;
+import java.awt.CardLayout;
 
 /**
  *
@@ -13,20 +13,16 @@ import javax.swing.JLayeredPane;
  */
 public class Main extends javax.swing.JFrame {
 
-//    Order order = new Order();
     
     /**
      * Creates new form Main
      */
     public Main() {
-        initComponents();
-//        System.out.println(this.getWidth()+" : "+this.getHeight());
-//        layeredPane.setSize(1374,887);
-//        layeredPane.add(order, JLayeredPane.DEFAULT_LAYER);
-//        order.setBounds(0,0,1328,869);
-        
+        initComponents(); 
+        this.setSize(1646, 918);
+        this.setLocationRelativeTo(null);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,48 +36,66 @@ public class Main extends javax.swing.JFrame {
         btnOrder = new javax.swing.JButton();
         btnMember = new javax.swing.JButton();
         btnGame = new javax.swing.JButton();
-        btnCategory = new javax.swing.JButton();
-        btnUpdate = new javax.swing.JButton();
         btnEmployee = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
-        layeredPane = new javax.swing.JLayeredPane();
-        order1 = new main.Order();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        btnReport = new javax.swing.JButton();
+        ccPane = new javax.swing.JPanel();
+        OrderPane = new main.AddOrder();
+        MemberPane = new main.AddMember();
+        GamePane = new main.AddGame();
+        EmployeePane = new main.AddEmployee();
+        ReportPane = new main.ViewReport();
+        aMenu = new javax.swing.JMenuBar();
         mMenu = new javax.swing.JMenu();
         miOrder = new javax.swing.JMenuItem();
         miMember = new javax.swing.JMenuItem();
         miGame = new javax.swing.JMenuItem();
         miCategory = new javax.swing.JMenuItem();
-        miStock = new javax.swing.JMenuItem();
         miEmp = new javax.swing.JMenuItem();
+        mReport = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         imLogout = new javax.swing.JMenuItem();
         imExit = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1630, 919));
+        setPreferredSize(new java.awt.Dimension(1630, 919));
 
         buttonPane.setBackground(new java.awt.Color(255, 255, 255));
         buttonPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         btnOrder.setText("Order");
         btnOrder.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        btnOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOrderActionPerformed(evt);
+            }
+        });
 
         btnMember.setText("Membership");
         btnMember.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        btnMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMemberActionPerformed(evt);
+            }
+        });
 
         btnGame.setText("Add Game");
         btnGame.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-
-        btnCategory.setText("Add Categories");
-        btnCategory.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-
-        btnUpdate.setText("Update stock");
-        btnUpdate.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        btnGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGameActionPerformed(evt);
+            }
+        });
 
         btnEmployee.setText("Employee");
         btnEmployee.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        btnEmployee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmployeeActionPerformed(evt);
+            }
+        });
 
         btnExit.setText("Exit");
         btnExit.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
@@ -93,19 +107,31 @@ public class Main extends javax.swing.JFrame {
 
         btnLogout.setText("Log out");
         btnLogout.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
+        btnReport.setText("Report");
+        btnReport.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout buttonPaneLayout = new javax.swing.GroupLayout(buttonPane);
         buttonPane.setLayout(buttonPaneLayout);
         buttonPaneLayout.setHorizontalGroup(
             buttonPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMember, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
             .addComponent(btnGame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnCategory, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-            .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnEmployee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         buttonPaneLayout.setVerticalGroup(
             buttonPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,51 +142,87 @@ public class Main extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btnGame, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(btnCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
                 .addComponent(btnEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 571, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        layeredPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        layeredPane.setLayout(new java.awt.BorderLayout());
-        layeredPane.add(order1, java.awt.BorderLayout.CENTER);
+        ccPane.setLayout(new java.awt.CardLayout());
+        ccPane.add(OrderPane, "Order");
+        ccPane.add(MemberPane, "Member");
+        ccPane.add(GamePane, "Game");
+        ccPane.add(EmployeePane, "Employee");
+        ccPane.add(ReportPane, "Report");
 
         mMenu.setText("Menu");
 
         miOrder.setText("Order");
+        miOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miOrderActionPerformed(evt);
+            }
+        });
         mMenu.add(miOrder);
 
         miMember.setText("Membership");
+        miMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miMemberActionPerformed(evt);
+            }
+        });
         mMenu.add(miMember);
 
         miGame.setText("Add Game");
+        miGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miGameActionPerformed(evt);
+            }
+        });
         mMenu.add(miGame);
 
         miCategory.setText("Add Categories");
         mMenu.add(miCategory);
 
-        miStock.setText("Update Stock");
-        mMenu.add(miStock);
-
         miEmp.setText("Employee");
+        miEmp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miEmpActionPerformed(evt);
+            }
+        });
         mMenu.add(miEmp);
+
+        mReport.setText("Report");
+        mReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mReportActionPerformed(evt);
+            }
+        });
+        mMenu.add(mReport);
         mMenu.add(jSeparator1);
 
         imLogout.setText("Log out");
+        imLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imLogoutActionPerformed(evt);
+            }
+        });
         mMenu.add(imLogout);
 
         imExit.setText("Exit");
+        imExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imExitActionPerformed(evt);
+            }
+        });
         mMenu.add(imExit);
 
-        jMenuBar1.add(mMenu);
+        aMenu.add(mMenu);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(aMenu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -169,12 +231,12 @@ public class Main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(buttonPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(layeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1374, Short.MAX_VALUE))
+                .addComponent(ccPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(buttonPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(layeredPane)
+            .addComponent(ccPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -182,7 +244,66 @@ public class Main extends javax.swing.JFrame {
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
+
+    private void btnOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderActionPerformed
+        CardLayout card = (CardLayout)ccPane.getLayout();
+        card.show(ccPane, "Order");
+    }//GEN-LAST:event_btnOrderActionPerformed
+
+    private void btnMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMemberActionPerformed
+        CardLayout card = (CardLayout)ccPane.getLayout();
+        card.show(ccPane, "Member");
+    }//GEN-LAST:event_btnMemberActionPerformed
+
+    private void btnGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGameActionPerformed
+CardLayout card = (CardLayout)ccPane.getLayout();
+        card.show(ccPane, "Game");
+    }//GEN-LAST:event_btnGameActionPerformed
+
+    private void miOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOrderActionPerformed
+        btnOrder.doClick();
+    }//GEN-LAST:event_miOrderActionPerformed
+
+    private void miMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMemberActionPerformed
+        btnMember.doClick();
+    }//GEN-LAST:event_miMemberActionPerformed
+
+    private void miGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miGameActionPerformed
+        btnGame.doClick();
+    }//GEN-LAST:event_miGameActionPerformed
+
+    private void miEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpActionPerformed
+        btnEmployee.doClick();
+    }//GEN-LAST:event_miEmpActionPerformed
+
+    private void mReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mReportActionPerformed
+        btnReport.doClick();
+    }//GEN-LAST:event_mReportActionPerformed
+
+    private void imLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imLogoutActionPerformed
+        btnLogout.doClick();
+    }//GEN-LAST:event_imLogoutActionPerformed
+
+    private void btnEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmployeeActionPerformed
+CardLayout card = (CardLayout)ccPane.getLayout();
+        card.show(ccPane, "Employee");
+    }//GEN-LAST:event_btnEmployeeActionPerformed
+
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+CardLayout card = (CardLayout)ccPane.getLayout();
+        card.show(ccPane, "Report");
+    }//GEN-LAST:event_btnReportActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void imExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imExitActionPerformed
+        btnExit.doClick();
+    }//GEN-LAST:event_imExitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,27 +320,30 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCategory;
+    private main.AddEmployee EmployeePane;
+    private main.AddGame GamePane;
+    private main.AddMember MemberPane;
+    private main.AddOrder OrderPane;
+    private main.ViewReport ReportPane;
+    private javax.swing.JMenuBar aMenu;
     private javax.swing.JButton btnEmployee;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnGame;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnMember;
     private javax.swing.JButton btnOrder;
-    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnReport;
     private javax.swing.JPanel buttonPane;
+    private javax.swing.JPanel ccPane;
     private javax.swing.JMenuItem imExit;
     private javax.swing.JMenuItem imLogout;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JMenu mMenu;
+    private javax.swing.JMenuItem mReport;
     private javax.swing.JMenuItem miCategory;
     private javax.swing.JMenuItem miEmp;
     private javax.swing.JMenuItem miGame;
     private javax.swing.JMenuItem miMember;
     private javax.swing.JMenuItem miOrder;
-    private javax.swing.JMenuItem miStock;
-    private main.Order order1;
     // End of variables declaration//GEN-END:variables
 }

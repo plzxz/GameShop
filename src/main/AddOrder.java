@@ -8,12 +8,12 @@ package main;
  *
  * @author Pete
  */
-public class Order extends javax.swing.JPanel {
+public class AddOrder extends javax.swing.JPanel {
 
     /**
      * Creates new form Order
      */
-    public Order() {
+    public AddOrder() {
         initComponents();
         
     }
@@ -54,6 +54,8 @@ public class Order extends javax.swing.JPanel {
         txtDesStatus = new javax.swing.JTextField();
         lbDesPrice = new javax.swing.JLabel();
         txtDesPrice = new javax.swing.JTextField();
+        lbDesId = new javax.swing.JLabel();
+        txtDesId = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblStock = new javax.swing.JTable();
         HeaderPane = new javax.swing.JPanel();
@@ -90,7 +92,6 @@ public class Order extends javax.swing.JPanel {
         lbCartQuantity.setText("Quantity :");
 
         txtCartQuantity.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        txtDesQuantity.setEditable(false);
 
         btnCartPlus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartPlus.setText("+");
@@ -108,7 +109,6 @@ public class Order extends javax.swing.JPanel {
         lbCartMember.setText("Membership :");
 
         txtCartMember.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        txtDesQuantity.setEditable(false);
 
         btnCartMember.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartMember.setText("placeHolder");
@@ -179,7 +179,7 @@ public class Order extends javax.swing.JPanel {
                 .addComponent(btnCartProcess)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCartPrint)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                 .addComponent(btnCartClear)
                 .addGap(18, 18, 18))
         );
@@ -219,6 +219,12 @@ public class Order extends javax.swing.JPanel {
         txtDesPrice.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         txtDesPrice.setEditable(false);
 
+        lbDesId.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbDesId.setText("Id :");
+
+        txtDesId.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtDesId.setEditable(false);
+
         javax.swing.GroupLayout DescriptionPaneLayout = new javax.swing.GroupLayout(DescriptionPane);
         DescriptionPane.setLayout(DescriptionPaneLayout);
         DescriptionPaneLayout.setHorizontalGroup(
@@ -227,27 +233,35 @@ public class Order extends javax.swing.JPanel {
                 .addGap(32, 32, 32)
                 .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbDesDescription)
-                    .addComponent(lbDesName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
-                    .addComponent(txtDesName))
-                .addGap(18, 18, 18)
-                .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbDesQuantity)
-                    .addComponent(lbDesPrice)
-                    .addComponent(lbDesStatus))
+                    .addComponent(lbDesName)
+                    .addComponent(lbDesId))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDesPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDesQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(168, Short.MAX_VALUE))
+                    .addGroup(DescriptionPaneLayout.createSequentialGroup()
+                        .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                            .addComponent(txtDesName))
+                        .addGap(18, 18, 18)
+                        .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbDesQuantity)
+                            .addComponent(lbDesPrice)
+                            .addComponent(lbDesStatus))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtDesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDesPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDesQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txtDesId, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(268, Short.MAX_VALUE))
         );
         DescriptionPaneLayout.setVerticalGroup(
             DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(DescriptionPaneLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DescriptionPaneLayout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbDesId)
+                    .addComponent(txtDesId, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(DescriptionPaneLayout.createSequentialGroup()
                         .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,7 +283,7 @@ public class Order extends javax.swing.JPanel {
                         .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbDesDescription)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
 
         tblStock.setModel(new javax.swing.table.DefaultTableModel(
@@ -394,6 +408,7 @@ public class Order extends javax.swing.JPanel {
     private javax.swing.JLabel lbCartQuantity;
     private javax.swing.JLabel lbCategory;
     private javax.swing.JLabel lbDesDescription;
+    private javax.swing.JLabel lbDesId;
     private javax.swing.JLabel lbDesName;
     private javax.swing.JLabel lbDesPrice;
     private javax.swing.JLabel lbDesQuantity;
@@ -405,6 +420,7 @@ public class Order extends javax.swing.JPanel {
     private javax.swing.JTextArea txtADescription;
     private javax.swing.JTextField txtCartMember;
     private javax.swing.JTextField txtCartQuantity;
+    private javax.swing.JTextField txtDesId;
     private javax.swing.JTextField txtDesName;
     private javax.swing.JTextField txtDesPrice;
     private javax.swing.JTextField txtDesQuantity;
