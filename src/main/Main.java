@@ -13,14 +13,27 @@ import java.awt.CardLayout;
  */
 public class Main extends javax.swing.JFrame {
 
-    
+     Login parent;
+     String rank;
     /**
      * Creates new form Main
      */
-    public Main() {
+    public Main(Login frame, String rank) {
+        this.parent = frame;
+        this.rank = rank;
         initComponents(); 
         this.setSize(1646, 918);
         this.setLocationRelativeTo(null);
+        isAdmin();
+    }
+    
+    private void isAdmin() {
+    if(!rank.equalsIgnoreCase("Admin")) {
+            btnEmployee.setVisible(false);
+            btnReport.setVisible(false);
+            miEmp.setVisible(false);
+            miReport.setVisible(false);
+        }
     }
     
     /**
@@ -53,10 +66,10 @@ public class Main extends javax.swing.JFrame {
         miGame = new javax.swing.JMenuItem();
         miCategory = new javax.swing.JMenuItem();
         miEmp = new javax.swing.JMenuItem();
-        mReport = new javax.swing.JMenuItem();
+        miReport = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        imLogout = new javax.swing.JMenuItem();
-        imExit = new javax.swing.JMenuItem();
+        miLogout = new javax.swing.JMenuItem();
+        miExit = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1630, 919));
@@ -195,30 +208,30 @@ public class Main extends javax.swing.JFrame {
         });
         mMenu.add(miEmp);
 
-        mReport.setText("Report");
-        mReport.addActionListener(new java.awt.event.ActionListener() {
+        miReport.setText("Report");
+        miReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mReportActionPerformed(evt);
+                miReportActionPerformed(evt);
             }
         });
-        mMenu.add(mReport);
+        mMenu.add(miReport);
         mMenu.add(jSeparator1);
 
-        imLogout.setText("Log out");
-        imLogout.addActionListener(new java.awt.event.ActionListener() {
+        miLogout.setText("Log out");
+        miLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                imLogoutActionPerformed(evt);
+                miLogoutActionPerformed(evt);
             }
         });
-        mMenu.add(imLogout);
+        mMenu.add(miLogout);
 
-        imExit.setText("Exit");
-        imExit.addActionListener(new java.awt.event.ActionListener() {
+        miExit.setText("Exit");
+        miExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                imExitActionPerformed(evt);
+                miExitActionPerformed(evt);
             }
         });
-        mMenu.add(imExit);
+        mMenu.add(miExit);
 
         aMenu.add(mMenu);
 
@@ -279,13 +292,13 @@ CardLayout card = (CardLayout)ccPane.getLayout();
         btnEmployee.doClick();
     }//GEN-LAST:event_miEmpActionPerformed
 
-    private void mReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mReportActionPerformed
+    private void miReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miReportActionPerformed
         btnReport.doClick();
-    }//GEN-LAST:event_mReportActionPerformed
+    }//GEN-LAST:event_miReportActionPerformed
 
-    private void imLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imLogoutActionPerformed
+    private void miLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLogoutActionPerformed
         btnLogout.doClick();
-    }//GEN-LAST:event_imLogoutActionPerformed
+    }//GEN-LAST:event_miLogoutActionPerformed
 
     private void btnEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmployeeActionPerformed
 CardLayout card = (CardLayout)ccPane.getLayout();
@@ -298,12 +311,13 @@ CardLayout card = (CardLayout)ccPane.getLayout();
     }//GEN-LAST:event_btnReportActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-
+        parent.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
-    private void imExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imExitActionPerformed
+    private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
         btnExit.doClick();
-    }//GEN-LAST:event_imExitActionPerformed
+    }//GEN-LAST:event_miExitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -314,7 +328,7 @@ CardLayout card = (CardLayout)ccPane.getLayout();
         FlatLightLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Main().setVisible(true);
+                new Main(new Login(), "Admin").setVisible(true);
             }
         });
     }
@@ -335,15 +349,15 @@ CardLayout card = (CardLayout)ccPane.getLayout();
     private javax.swing.JButton btnReport;
     private javax.swing.JPanel buttonPane;
     private javax.swing.JPanel ccPane;
-    private javax.swing.JMenuItem imExit;
-    private javax.swing.JMenuItem imLogout;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenu mMenu;
-    private javax.swing.JMenuItem mReport;
     private javax.swing.JMenuItem miCategory;
     private javax.swing.JMenuItem miEmp;
+    private javax.swing.JMenuItem miExit;
     private javax.swing.JMenuItem miGame;
+    private javax.swing.JMenuItem miLogout;
     private javax.swing.JMenuItem miMember;
     private javax.swing.JMenuItem miOrder;
+    private javax.swing.JMenuItem miReport;
     // End of variables declaration//GEN-END:variables
 }

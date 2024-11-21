@@ -11,7 +11,7 @@ public class DBConnection {
     public static Connection conn;
 
     public DBConnection() {
-//        connect();
+        connect();
     }
     
     public static void connect() { //static Connection connect() 
