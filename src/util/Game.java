@@ -10,7 +10,8 @@ package util;
  */
 public class Game {
     
-    private String id;
+    private int id;
+    private String gameId;
     private int catId;
     private String name;
     private String des;
@@ -20,8 +21,9 @@ public class Game {
     
     
         
-    public Game(String id, int catId, String name, String des, int quantity, String status, double price) {
+    public Game(int id, String gId, int catId, String name, String des, int quantity, String status, double price) {
         setId(id);
+        setGameId(gId);
         setCatId(catId);
         setName(name);
         setDes(des);
@@ -30,8 +32,9 @@ public class Game {
         setPrice(price);
     }
     
-    public void setGame(String id, int catId, String name, String des, int quantity, String status, double price) {
+    public void setGame(int id, String gId, int catId, String name, String des, int quantity, String status, double price) {
         setId(id);
+        setGameId(gId);
         setCatId(catId);
         setName(name);
         setDes(des);
@@ -41,13 +44,20 @@ public class Game {
     }
     
     
-
-    public String getId() {
+    public int getId() {
         return id;
     }
-
-    public void setId(String id) {
+    
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(String id) {
+        this.gameId = id;
     }
 
     public int getCatId() {

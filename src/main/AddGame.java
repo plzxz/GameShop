@@ -43,7 +43,7 @@ public class AddGame extends javax.swing.JPanel {
             
             game = new GameDA().getGameData(game_id);
             
-            txtDesId.setText(game.getId());
+            txtDesId.setText(game.getGameId());
             txtDesName.setText(game.getName());
             txtADescription.setText(game.getDes());
             txtDesStatus.setText(game.getStatus());
@@ -58,13 +58,15 @@ public class AddGame extends javax.swing.JPanel {
     }
     
     public void updateGameData() {
-        game.setId(txtDesId.getText());
+        game.setGameId(txtDesId.getText());
         game.setName(txtDesName.getText());
         game.setDes(txtAAddDescription.getText());
         game.setCatId(cbDesCategory.getSelectedIndex());
         game.setStatus(txtDesStatus.getText());
         game.setQuantity(Integer.parseInt(txtDesQuantity.getText()));
         game.setPrice(Double.parseDouble(txtDesPrice.getText()));
+        
+        new GameDA().updateGame(game);
         
     }
     
@@ -80,7 +82,7 @@ public class AddGame extends javax.swing.JPanel {
     }
     
     private void lockGameData() {
-        txtDesId.setEnabled(false);
+//        txtDesId.setEnabled(false);
         txtDesName.setEnabled(false);
         txtADescription.setEnabled(false);
         txtDesQuantity.setEnabled(false);
@@ -90,7 +92,7 @@ public class AddGame extends javax.swing.JPanel {
     }
     
     private void unlockGameData() {
-        txtDesId.setEnabled(true);
+//        txtDesId.setEnabled(true);
         txtDesName.setEnabled(true);
         txtADescription.setEnabled(true);
         txtDesQuantity.setEnabled(true);
@@ -338,6 +340,7 @@ public class AddGame extends javax.swing.JPanel {
         lbDesName.setText("Name :");
 
         txtDesName.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtDesName.setEnabled(false);
 
         lbDesDescription.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbDesDescription.setText("Description :");
@@ -350,6 +353,11 @@ public class AddGame extends javax.swing.JPanel {
 
         btnDesUpdate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnDesUpdate.setText("Update");
+        btnDesUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDesUpdateActionPerformed(evt);
+            }
+        });
 
         lbDesId.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbDesId.setText("Id :");
@@ -410,7 +418,6 @@ public class AddGame extends javax.swing.JPanel {
                 .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtDesId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbDesId))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, DescriptionPaneLayout.createSequentialGroup()
                         .addGap(2, 2, 2)
@@ -574,6 +581,10 @@ public class AddGame extends javax.swing.JPanel {
         lockGameData();
     }//GEN-LAST:event_btnSearchActionPerformed
 
+    private void btnDesUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesUpdateActionPerformed
+        updateGameData();
+    }//GEN-LAST:event_btnDesUpdateActionPerformed
+
     
     private void stockSelectionPerformed(ListSelectionEvent evt) {
         try{
@@ -581,6 +592,7 @@ public class AddGame extends javax.swing.JPanel {
             int selectedRow = tblStock.getSelectedRow();
             if (selectedRow != -1) {
                 setGameData();
+                unlockGameData();
             }
         }
         }catch(IndexOutOfBoundsException e) {

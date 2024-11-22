@@ -32,8 +32,8 @@ public class ReportTable { //copy for another table
         ArrayList<Object> aData = new ArrayList<>();
         
         String sql = "SELECT Bill_ID AS ID, Dill_Date AS Date, customer_ID AS C_ID, First_Name AS Employee, product_name AS Game, category_name AS Category, product_price AS Price, Amount, Total_price AS Total " +
-                     "FROM employee INNER JOIN (customer INNER JOIN (Bill INNER JOIN ((category INNER JOIN product ON category.category_ID = product.Category_ID) INNER JOIN Bill_detail ON product.Game_ID ="+
-                     " Bill_detail.Game_ID) ON Bill.Bill_ID = Bill_detail.Bill_ID) ON customer.customer_ID = Bill.C_ID) ON employee.EMP_ID = Bill.EMP_ID WHERE 1=1";
+                     "FROM employee INNER JOIN (customer INNER JOIN (Bill INNER JOIN ((category INNER JOIN product ON category.category_ID = product.Category_ID) INNER JOIN Bill_detail ON product.product_ID ="+
+                     " Bill_detail.product_ID) ON Bill.Bill_ID = Bill_detail.Bill_ID) ON customer.customer_ID = Bill.C_ID) ON employee.EMP_ID = Bill.EMP_ID WHERE 1=1";
               
         if(data != null) {
             sql += data[0];

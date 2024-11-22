@@ -36,7 +36,7 @@ public class AddOrder extends javax.swing.JPanel {
             
             game = new GameDA().getGameData(game_id);
             
-            txtDesId.setText(game.getId());
+            txtDesId.setText(game.getGameId());
             txtDesName.setText(game.getName());
             txtADescription.setText(game.getDes());
             txtDesStatus.setText(game.getStatus());
