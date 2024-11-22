@@ -26,6 +26,7 @@ public class AddGame extends javax.swing.JPanel {
         initComponents();
         updateCB();
         setTableSelection();
+        lockGameData();
     }
     
     private void updateCB() {
@@ -58,6 +59,7 @@ public class AddGame extends javax.swing.JPanel {
     }
     
     public void updateGameData() {
+        
         game.setGameId(txtDesId.getText());
         game.setName(txtDesName.getText());
         game.setDes(txtAAddDescription.getText());
@@ -68,6 +70,20 @@ public class AddGame extends javax.swing.JPanel {
         
         new GameDA().updateGame(game);
         
+    }
+    
+    public void addNewGame() {
+        
+        String gID = txtAddId.getText();
+        String name = txtAddName.getText();
+        int cID = cbDesCategory.getSelectedIndex();
+        String des = txtADescription.getText();
+        int qnt = Integer.parseInt(txtAddQuantity.getText());
+        String stat = "Available";
+        double price = Double.parseDouble(txtAddPrice.getText());
+        
+        Game aGame = new Game(0, gID, cID, name, des, qnt, stat, price);
+    
     }
     
     private void clearGameData() {
@@ -82,7 +98,7 @@ public class AddGame extends javax.swing.JPanel {
     }
     
     private void lockGameData() {
-//        txtDesId.setEnabled(false);
+        txtDesId.setEnabled(false);
         txtDesName.setEnabled(false);
         txtADescription.setEnabled(false);
         txtDesQuantity.setEnabled(false);
@@ -92,7 +108,7 @@ public class AddGame extends javax.swing.JPanel {
     }
     
     private void unlockGameData() {
-//        txtDesId.setEnabled(true);
+        txtDesId.setEnabled(true);
         txtDesName.setEnabled(true);
         txtADescription.setEnabled(true);
         txtDesQuantity.setEnabled(true);
@@ -159,6 +175,8 @@ public class AddGame extends javax.swing.JPanel {
         txtAAddDescription = new javax.swing.JTextArea();
         lbAddDescription = new javax.swing.JLabel();
         lbAdd = new javax.swing.JLabel();
+        lbAddName1 = new javax.swing.JLabel();
+        txtAddPrice = new javax.swing.JTextField();
         DescriptionPane = new javax.swing.JPanel();
         lbDesQuantity = new javax.swing.JLabel();
         txtDesQuantity = new javax.swing.JTextField();
@@ -234,33 +252,30 @@ public class AddGame extends javax.swing.JPanel {
         lbAdd.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbAdd.setText("Add");
 
+        lbAddName1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbAddName1.setText("Price :");
+
+        txtAddPrice.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+
         javax.swing.GroupLayout AddPaneLayout = new javax.swing.GroupLayout(AddPane);
         AddPane.setLayout(AddPaneLayout);
         AddPaneLayout.setHorizontalGroup(
             AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AddPaneLayout.createSequentialGroup()
+                .addGap(140, 140, 140)
+                .addComponent(lbAdd)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(AddPaneLayout.createSequentialGroup()
                 .addGap(46, 46, 46)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(AddPaneLayout.createSequentialGroup()
                         .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(AddPaneLayout.createSequentialGroup()
-                                .addGap(43, 43, 43)
-                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnAddClear, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(AddPaneLayout.createSequentialGroup()
-                                    .addComponent(lbAddCategory)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(cbAddCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, AddPaneLayout.createSequentialGroup()
-                                    .addComponent(lbAddQuantity)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtAddQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnAddPlus)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnAddMinus))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(AddPaneLayout.createSequentialGroup()
+                                .addComponent(lbAddCategory)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbAddCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(67, 67, 67))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AddPaneLayout.createSequentialGroup()
                         .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbAddName)
@@ -272,44 +287,60 @@ public class AddGame extends javax.swing.JPanel {
                         .addGap(76, 76, 76))
                     .addGroup(AddPaneLayout.createSequentialGroup()
                         .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(AddPaneLayout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(lbAddDescription)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 47, Short.MAX_VALUE))))
-            .addGroup(AddPaneLayout.createSequentialGroup()
-                .addGap(140, 140, 140)
-                .addComponent(lbAdd)
-                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(AddPaneLayout.createSequentialGroup()
+                                    .addComponent(lbAddName1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtAddPrice))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, AddPaneLayout.createSequentialGroup()
+                                    .addComponent(lbAddQuantity)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtAddQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnAddPlus)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnAddMinus))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         AddPaneLayout.setVerticalGroup(
             AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AddPaneLayout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(lbAdd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtAddId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddId))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtAddName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbAddCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddCategory))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtAddPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbAddName1))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddPlus)
                     .addComponent(btnAddMinus)
                     .addComponent(txtAddQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddQuantity))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(lbAddDescription)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(btnAdd)
-                .addGap(292, 292, 292)
+                .addGap(249, 249, 249)
                 .addComponent(btnAddClear)
                 .addGap(18, 18, 18))
         );
@@ -556,7 +587,7 @@ public class AddGame extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(DescriptionPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(AddPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -621,6 +652,7 @@ public class AddGame extends javax.swing.JPanel {
     private javax.swing.JLabel lbAddDescription;
     private javax.swing.JLabel lbAddId;
     private javax.swing.JLabel lbAddName;
+    private javax.swing.JLabel lbAddName1;
     private javax.swing.JLabel lbAddQuantity;
     private javax.swing.JLabel lbCategory;
     private javax.swing.JLabel lbDesCategory;
@@ -637,6 +669,7 @@ public class AddGame extends javax.swing.JPanel {
     private javax.swing.JTextArea txtADescription;
     private javax.swing.JTextField txtAddId;
     private javax.swing.JTextField txtAddName;
+    private javax.swing.JTextField txtAddPrice;
     private javax.swing.JTextField txtAddQuantity;
     private javax.swing.JTextField txtDesId;
     private javax.swing.JTextField txtDesName;

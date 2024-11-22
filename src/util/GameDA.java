@@ -75,4 +75,21 @@ public class GameDA {
         }
     }
     
+        public void addGame(Game game) {
+            
+            
+            String sql = "INSERT INTO Product () VALUES ()";
+            
+            try(PreparedStatement stmt = conn.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS)) {
+            
+                stmt.setString(1, game.getGameId());
+                
+                
+            }catch(SQLException e) {
+                JOptionPane.showMessageDialog(null, "Something wrong.", "Warning", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+            
+        }
+    
 }
