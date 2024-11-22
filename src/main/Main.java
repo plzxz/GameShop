@@ -12,19 +12,22 @@ import java.awt.CardLayout;
  * @author Pete
  */
 public class Main extends javax.swing.JFrame {
-
+    
      Login parent;
      String rank;
+     int eId;
     /**
      * Creates new form Main
      */
-    public Main(Login frame, String rank) {
+    public Main(Login frame, String rank, int id) {
         this.parent = frame;
         this.rank = rank;
+        this.eId = id;
         initComponents(); 
         this.setSize(1646, 918);
         this.setLocationRelativeTo(null);
         isAdmin();
+        OrderPane.setEmpID(id);
     }
     
     private void isAdmin() {
@@ -73,7 +76,6 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1630, 919));
-        setPreferredSize(new java.awt.Dimension(1630, 919));
 
         buttonPane.setBackground(new java.awt.Color(255, 255, 255));
         buttonPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -164,6 +166,8 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        ccPane.setMinimumSize(new java.awt.Dimension(1420, 895));
+        ccPane.setPreferredSize(new java.awt.Dimension(1420, 895));
         ccPane.setLayout(new java.awt.CardLayout());
         ccPane.add(OrderPane, "Order");
         ccPane.add(MemberPane, "Member");
@@ -264,6 +268,7 @@ public class Main extends javax.swing.JFrame {
     private void btnOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderActionPerformed
         CardLayout card = (CardLayout)ccPane.getLayout();
         card.show(ccPane, "Order");
+        OrderPane.updateSearch();
     }//GEN-LAST:event_btnOrderActionPerformed
 
     private void btnMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMemberActionPerformed
@@ -274,30 +279,31 @@ public class Main extends javax.swing.JFrame {
     private void btnGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGameActionPerformed
 CardLayout card = (CardLayout)ccPane.getLayout();
         card.show(ccPane, "Game");
+        GamePane.updateGameData();
     }//GEN-LAST:event_btnGameActionPerformed
 
     private void miOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOrderActionPerformed
-        btnOrder.doClick();
+        btnOrderActionPerformed(evt);
     }//GEN-LAST:event_miOrderActionPerformed
 
     private void miMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMemberActionPerformed
-        btnMember.doClick();
+        btnMemberActionPerformed(evt);
     }//GEN-LAST:event_miMemberActionPerformed
 
     private void miGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miGameActionPerformed
-        btnGame.doClick();
+        btnGameActionPerformed(evt);
     }//GEN-LAST:event_miGameActionPerformed
 
     private void miEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpActionPerformed
-        btnEmployee.doClick();
+        btnEmployeeActionPerformed(evt);
     }//GEN-LAST:event_miEmpActionPerformed
 
     private void miReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miReportActionPerformed
-        btnReport.doClick();
+        btnReportActionPerformed(evt);
     }//GEN-LAST:event_miReportActionPerformed
 
     private void miLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLogoutActionPerformed
-        btnLogout.doClick();
+        btnLogoutActionPerformed(evt);
     }//GEN-LAST:event_miLogoutActionPerformed
 
     private void btnEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmployeeActionPerformed
@@ -308,6 +314,7 @@ CardLayout card = (CardLayout)ccPane.getLayout();
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
 CardLayout card = (CardLayout)ccPane.getLayout();
         card.show(ccPane, "Report");
+        ReportPane.checkSearch();
     }//GEN-LAST:event_btnReportActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -316,7 +323,7 @@ CardLayout card = (CardLayout)ccPane.getLayout();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
-        btnExit.doClick();
+        btnExitActionPerformed(evt);
     }//GEN-LAST:event_miExitActionPerformed
 
     /**
@@ -328,7 +335,7 @@ CardLayout card = (CardLayout)ccPane.getLayout();
         FlatLightLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Main(new Login(), "Admin").setVisible(true);
+                new Main(new Login(), "Admin", 1).setVisible(true);
             }
         });
     }

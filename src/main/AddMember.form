@@ -120,9 +120,9 @@
                       <Component id="lbAddLname" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtAddEmail" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lbAddEmail" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtAddEmail" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                   <Component id="btnAdd" min="-2" max="-2" attributes="0"/>
@@ -332,13 +332,15 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lbPanalName" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lbID" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtID" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="lbFname" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtFname" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lbID" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtID" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace pref="16" max="32767" attributes="0"/>
@@ -380,10 +382,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbFname">
           <Properties>
+            <Property name="text" type="java.lang.String" value="First Name :"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="First Name :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtFname">

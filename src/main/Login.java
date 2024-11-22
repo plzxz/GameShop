@@ -26,6 +26,7 @@ public class Login extends javax.swing.JFrame {
     Connection conn = dbConn.conn;
 
     String rank = "";
+    int id = 0;
 
     /**
      * Creates new form Login
@@ -44,7 +45,7 @@ public class Login extends javax.swing.JFrame {
         
         if(!(user.equals("")&&pass.equals(""))) {
             
-            String sql = "SELECT Rank FROM Employee WHERE First_Name= ? AND Pass= ?";
+            String sql = "SELECT Rank,EMP_ID FROM Employee WHERE First_Name= ? AND Pass= ?";
             try(PreparedStatement stmt = conn.prepareStatement(sql)) {
                 
                 stmt.setString(1, user);
@@ -53,6 +54,7 @@ public class Login extends javax.swing.JFrame {
                 
                 if(rs.next()) {
                     rank = rs.getString("Rank");
+                    id = rs.getInt("EMP_ID");
                     return true;
                 }else {
                     JOptionPane.showMessageDialog(this, "UserName or Password is incorrect.", "Warning", JOptionPane.ERROR_MESSAGE);
@@ -192,7 +194,7 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         if(checkPass()) {
-            new Main(this, rank).setVisible(true);
+            new Main(this, rank, id).setVisible(true);
             this.setVisible(false);
         }
         txtPassword.setText("");
@@ -217,7 +219,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUserActionPerformed
 
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
-        btnLogin.doClick();
+        btnLoginActionPerformed(evt);
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     /**

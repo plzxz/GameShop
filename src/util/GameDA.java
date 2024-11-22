@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  */
 public class GameDA {
     
-    Connection conn = DBConnection.conn;
+    private Connection conn = DBConnection.conn;
     
     public GameDA() {}
     
@@ -54,17 +54,18 @@ public class GameDA {
     
     public void updateGame(Game game) {
         
-        String sql = "UPDATE product SET Category_ID= ?, product_name= ?, product_description= ?, product_quantity= ?, product_status= ?, product_price= ? WHERE product_ID= ?";
+        String sql = "UPDATE product SET Game_ID= ?, Category_ID= ?, product_name= ?, product_description= ?, product_quantity= ?, product_status= ?, product_price= ? WHERE product_ID= ?";
         
         try(PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setInt(1, game.getCatId());
-            stmt.setString(2, game.getName());
-            stmt.setString(3, game.getDes());
-            stmt.setInt(4, game.getQuantity());
-            stmt.setString(5, game.getStatus());
-            stmt.setDouble(6, game.getPrice());
-            stmt.setInt(7, game.getId());
+            stmt.setString(1, game.getGameId());
+            stmt.setInt(2, game.getCatId());
+            stmt.setString(3, game.getName());
+            stmt.setString(4, game.getDes());
+            stmt.setInt(5, game.getQuantity());
+            stmt.setString(6, game.getStatus());
+            stmt.setDouble(7, game.getPrice());
+            stmt.setInt(8, game.getId());
             
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Update Product successfully.", "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -78,12 +79,20 @@ public class GameDA {
         public void addGame(Game game) {
             
             
-            String sql = "INSERT INTO Product () VALUES ()";
+            String sql = "INSERT INTO Product (Game_ID, Category_ID, product_name, product_description, product_quantity, product_status, product_price) VALUES (?, ?, ?, ?, ?, ?, ?)";
             
             try(PreparedStatement stmt = conn.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS)) {
             
                 stmt.setString(1, game.getGameId());
+                stmt.setInt(2, game.getCatId());
+                stmt.setString(3, game.getName());
+                stmt.setString(4, game.getDes());
+                stmt.setInt(5, game.getQuantity());
+                stmt.setString(6, game.getStatus());
+                stmt.setDouble(7, game.getPrice());
                 
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Add Product successfully.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 
             }catch(SQLException e) {
                 JOptionPane.showMessageDialog(null, "Something wrong.", "Warning", JOptionPane.ERROR_MESSAGE);

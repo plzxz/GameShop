@@ -38,7 +38,7 @@ public class ViewReport extends javax.swing.JPanel {
         txtTotal.setText(new DecimalFormat(",###.00").format(total));
     }
     
-    private void checkSearch() {
+    public void checkSearch() {
         String sql = "";
         ArrayList<Object> data = new ArrayList<>();
         
@@ -140,12 +140,13 @@ public class ViewReport extends javax.swing.JPanel {
             DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DescriptionPaneLayout.createSequentialGroup()
                 .addContainerGap(26, Short.MAX_VALUE)
-                .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbRow)
-                    .addComponent(txtRowCount, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lbTotal)
-                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lbRow)
+                        .addComponent(txtRowCount, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(9, 9, 9))
         );
 

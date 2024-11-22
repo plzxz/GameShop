@@ -16,7 +16,7 @@ import util.*;
  * @author Pete
  */
 public class AddGame extends javax.swing.JPanel {
-
+    
     Game game;
     
     /**
@@ -25,6 +25,7 @@ public class AddGame extends javax.swing.JPanel {
     public AddGame() {
         initComponents();
         updateCB();
+        updateTable();
         setTableSelection();
         lockGameData();
     }
@@ -33,6 +34,10 @@ public class AddGame extends javax.swing.JPanel {
         cbCategory.setModel(new ModelCombox().getModel("category", "category_name"));
         cbAddCategory.setModel(new ModelCombox().getModel("category", "category_name"));
         cbDesCategory.setModel(new ModelCombox().getModel("category", "category_name"));
+    }
+    
+    public void updateTable() {
+        tblStock.setModel(new GameTable().getModel(null));
     }
     
     public void setGameData() {
@@ -47,7 +52,12 @@ public class AddGame extends javax.swing.JPanel {
             txtDesId.setText(game.getGameId());
             txtDesName.setText(game.getName());
             txtADescription.setText(game.getDes());
-            txtDesStatus.setText(game.getStatus());
+            
+            if(game.getStatus().equals("Available")) {
+                cbDesStatus.setSelectedIndex(0);
+            }else {
+                cbDesStatus.setSelectedIndex(1);
+            }
             txtDesQuantity.setText(game.getQuantity()+"");
             cbDesCategory.setSelectedIndex(game.getCatId());
             txtDesPrice.setText(new DecimalFormat(",###.00").format(game.getPrice()));
@@ -64,7 +74,7 @@ public class AddGame extends javax.swing.JPanel {
         game.setName(txtDesName.getText());
         game.setDes(txtAAddDescription.getText());
         game.setCatId(cbDesCategory.getSelectedIndex());
-        game.setStatus(txtDesStatus.getText());
+        game.setStatus(cbDesStatus.getSelectedItem().toString());
         game.setQuantity(Integer.parseInt(txtDesQuantity.getText()));
         game.setPrice(Double.parseDouble(txtDesPrice.getText()));
         
@@ -76,14 +86,27 @@ public class AddGame extends javax.swing.JPanel {
         
         String gID = txtAddId.getText();
         String name = txtAddName.getText();
-        int cID = cbDesCategory.getSelectedIndex();
+        int cID = cbAddCategory.getSelectedIndex();
         String des = txtADescription.getText();
         int qnt = Integer.parseInt(txtAddQuantity.getText());
-        String stat = "Available";
+        String stat = cbAddStatus.getSelectedItem().toString();
         double price = Double.parseDouble(txtAddPrice.getText());
         
         Game aGame = new Game(0, gID, cID, name, des, qnt, stat, price);
     
+        new GameDA().addGame(aGame);
+    }
+    
+    public void clearAdd() {
+        
+        txtAddId.setText("");
+        txtAddName.setText("");
+        cbAddCategory.setSelectedIndex(0);
+        cbAddStatus.setSelectedIndex(0);
+        txtAAddDescription.setText("");
+        txtAddQuantity.setText("");
+        txtAddPrice.setText("");
+        addQA = 0;
     }
     
     private void clearGameData() {
@@ -92,7 +115,7 @@ public class AddGame extends javax.swing.JPanel {
         txtDesName.setText("");
         txtADescription.setText("");
         txtDesQuantity.setText("");
-        txtDesStatus.setText("");
+        cbDesStatus.setSelectedIndex(0);
         txtDesPrice.setText("");
         cbDesCategory.setSelectedIndex(0);
     }
@@ -102,7 +125,7 @@ public class AddGame extends javax.swing.JPanel {
         txtDesName.setEnabled(false);
         txtADescription.setEnabled(false);
         txtDesQuantity.setEnabled(false);
-        txtDesStatus.setEnabled(false);
+        cbDesStatus.setEnabled(false);
         txtDesPrice.setEnabled(false);
         cbDesCategory.setEnabled(false);
     }
@@ -112,7 +135,7 @@ public class AddGame extends javax.swing.JPanel {
         txtDesName.setEnabled(true);
         txtADescription.setEnabled(true);
         txtDesQuantity.setEnabled(true);
-        txtDesStatus.setEnabled(true);
+        cbDesStatus.setEnabled(true);
         txtDesPrice.setEnabled(true);
         cbDesCategory.setEnabled(true);
     }
@@ -148,6 +171,33 @@ public class AddGame extends javax.swing.JPanel {
             }
         });
     }
+    
+    private boolean isNumber(String str) {
+        if(str.matches("\\d+")) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    private boolean isAddFilled() {
+        if(!(txtAddId.getText().isBlank()&&txtAddName.getText().isBlank()&&txtAddQuantity.getText().isBlank()&&txtAddPrice.getText().isBlank()&&txtAddQuantity.getText().isBlank()&cbAddCategory.getSelectedIndex()==0)) {
+            
+            if(!isNumber(txtAddPrice.getText())) {
+                JOptionPane.showMessageDialog(AddPane, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!isNumber(txtAddQuantity.getText())) {
+                JOptionPane.showMessageDialog(AddPane, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -177,13 +227,14 @@ public class AddGame extends javax.swing.JPanel {
         lbAdd = new javax.swing.JLabel();
         lbAddName1 = new javax.swing.JLabel();
         txtAddPrice = new javax.swing.JTextField();
+        lbAddStatus = new javax.swing.JLabel();
+        cbAddStatus = new javax.swing.JComboBox<>();
         DescriptionPane = new javax.swing.JPanel();
         lbDesQuantity = new javax.swing.JLabel();
         txtDesQuantity = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtADescription = new javax.swing.JTextArea();
         lbDesStatus = new javax.swing.JLabel();
-        txtDesStatus = new javax.swing.JTextField();
         lbDesPrice = new javax.swing.JLabel();
         txtDesPrice = new javax.swing.JTextField();
         lbDesName = new javax.swing.JLabel();
@@ -194,6 +245,7 @@ public class AddGame extends javax.swing.JPanel {
         btnDesUpdate = new javax.swing.JButton();
         lbDesId = new javax.swing.JLabel();
         txtDesId = new javax.swing.JTextField();
+        cbDesStatus = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblStock = new javax.swing.JTable();
         HeaderPane = new javax.swing.JPanel();
@@ -211,14 +263,29 @@ public class AddGame extends javax.swing.JPanel {
 
         btnAddClear.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnAddClear.setText("Clear");
+        btnAddClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddClearActionPerformed(evt);
+            }
+        });
 
         lbAddQuantity.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbAddQuantity.setText("Quantity : ");
 
         txtAddQuantity.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtAddQuantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAddQuantityActionPerformed(evt);
+            }
+        });
 
         btnAdd.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         lbAddName.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbAddName.setText("Name :");
@@ -227,9 +294,19 @@ public class AddGame extends javax.swing.JPanel {
 
         btnAddPlus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnAddPlus.setText("+");
+        btnAddPlus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPlusActionPerformed(evt);
+            }
+        });
 
         btnAddMinus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnAddMinus.setText("-");
+        btnAddMinus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddMinusActionPerformed(evt);
+            }
+        });
 
         lbAddId.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbAddId.setText("ID :");
@@ -256,6 +333,12 @@ public class AddGame extends javax.swing.JPanel {
         lbAddName1.setText("Price :");
 
         txtAddPrice.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+
+        lbAddStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbAddStatus.setText("Status :");
+
+        cbAddStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbAddStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Available", "Unavailable" }));
 
         javax.swing.GroupLayout AddPaneLayout = new javax.swing.GroupLayout(AddPane);
         AddPane.setLayout(AddPaneLayout);
@@ -292,55 +375,63 @@ public class AddGame extends javax.swing.JPanel {
                                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(lbAddDescription)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(AddPaneLayout.createSequentialGroup()
+                                .addComponent(lbAddQuantity)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtAddQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAddPlus)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAddMinus))
                             .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(AddPaneLayout.createSequentialGroup()
-                                    .addComponent(lbAddName1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtAddPrice))
+                                    .addComponent(lbAddStatus)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(cbAddStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, AddPaneLayout.createSequentialGroup()
-                                    .addComponent(lbAddQuantity)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtAddQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnAddPlus)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnAddMinus))))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addComponent(lbAddName1)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtAddPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         AddPaneLayout.setVerticalGroup(
             AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AddPaneLayout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(lbAdd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtAddId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddId))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 25, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtAddName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddName))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 25, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbAddCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddCategory))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 25, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtAddPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddName1))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbAddStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbAddStatus))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(AddPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddPlus)
                     .addComponent(btnAddMinus)
                     .addComponent(txtAddQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAddQuantity))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(lbAddDescription)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(btnAdd)
-                .addGap(249, 249, 249)
+                .addGap(198, 198, 198)
                 .addComponent(btnAddClear)
                 .addGap(18, 18, 18))
         );
@@ -359,8 +450,6 @@ public class AddGame extends javax.swing.JPanel {
 
         lbDesStatus.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbDesStatus.setText("Status :");
-
-        txtDesStatus.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         lbDesPrice.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbDesPrice.setText("Price :");
@@ -395,6 +484,9 @@ public class AddGame extends javax.swing.JPanel {
 
         txtDesId.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
+        cbDesStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbDesStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Available", "Unavailable" }));
+
         javax.swing.GroupLayout DescriptionPaneLayout = new javax.swing.GroupLayout(DescriptionPane);
         DescriptionPane.setLayout(DescriptionPaneLayout);
         DescriptionPaneLayout.setHorizontalGroup(
@@ -414,11 +506,11 @@ public class AddGame extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(DescriptionPaneLayout.createSequentialGroup()
-                                .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(DescriptionPaneLayout.createSequentialGroup()
                                         .addComponent(lbDesStatus)
-                                        .addGap(29, 29, 29)
-                                        .addComponent(txtDesStatus))
+                                        .addGap(25, 25, 25)
+                                        .addComponent(cbDesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(DescriptionPaneLayout.createSequentialGroup()
                                         .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lbDesQuantity)
@@ -428,8 +520,7 @@ public class AddGame extends javax.swing.JPanel {
                                         .addGap(12, 12, 12)
                                         .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(txtDesQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtDesPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(21, 21, 21)))
+                                            .addComponent(txtDesPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(DescriptionPaneLayout.createSequentialGroup()
                                 .addComponent(lbDesCategory)
@@ -457,8 +548,8 @@ public class AddGame extends javax.swing.JPanel {
                             .addComponent(btnDesUpdate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbDesStatus))
+                            .addComponent(lbDesStatus)
+                            .addComponent(cbDesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(9, 9, 9)
                         .addGroup(DescriptionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbDesQuantity)
@@ -490,7 +581,6 @@ public class AddGame extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tblStock.setModel(new GameTable().getModel(null));
         tblStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblStock.getTableHeader().setReorderingAllowed(false);
@@ -614,7 +704,66 @@ public class AddGame extends javax.swing.JPanel {
 
     private void btnDesUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesUpdateActionPerformed
         updateGameData();
+        searchGame();
     }//GEN-LAST:event_btnDesUpdateActionPerformed
+
+    private void btnAddClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddClearActionPerformed
+        clearAdd();
+    }//GEN-LAST:event_btnAddClearActionPerformed
+
+    int addQA = 0;
+    private void btnAddPlusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPlusActionPerformed
+        if(txtAddQuantity.getText().isBlank()) {
+            txtAddQuantity.setText("0");
+        }
+        if(isNumber(txtAddQuantity.getText())) {
+            int cartQ = Integer.parseInt(txtAddQuantity.getText()) + 1;
+            txtAddQuantity.setText(cartQ+"");
+            addQA = cartQ;
+        }else {
+            txtAddQuantity.setText(addQA+"");
+        }
+    }//GEN-LAST:event_btnAddPlusActionPerformed
+
+    private void btnAddMinusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMinusActionPerformed
+        if(txtAddQuantity.getText().isBlank()) {
+            txtAddQuantity.setText("0");
+        }
+        if(isNumber(txtAddQuantity.getText())) {
+            int cartQ = Integer.parseInt(txtAddQuantity.getText()) - 1;
+            txtAddQuantity.setText(cartQ+"");
+            addQA = cartQ;
+        }else {
+            txtAddQuantity.setText(addQA+"");
+        }
+    }//GEN-LAST:event_btnAddMinusActionPerformed
+
+    private void txtAddQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddQuantityActionPerformed
+        if(txtAddQuantity.getText().isBlank()) {
+            txtAddQuantity.setText("0");
+        }
+        if(isNumber(txtAddQuantity.getText())) {
+            int cartQ = Integer.parseInt(txtAddQuantity.getText());
+            txtAddQuantity.setText(cartQ+"");
+            addQA = cartQ;
+        }else {
+            txtAddQuantity.setText(addQA+"");
+        }
+    }//GEN-LAST:event_txtAddQuantityActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if(isAddFilled()) {
+            try {
+                addNewGame();
+                clearAdd();
+                updateTable();
+
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+    }//GEN-LAST:event_btnAddActionPerformed
 
     
     private void stockSelectionPerformed(ListSelectionEvent evt) {
@@ -642,8 +791,10 @@ public class AddGame extends javax.swing.JPanel {
     private javax.swing.JButton btnDesUpdate;
     private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cbAddCategory;
+    private javax.swing.JComboBox<String> cbAddStatus;
     private javax.swing.JComboBox<String> cbCategory;
     private javax.swing.JComboBox<String> cbDesCategory;
+    private javax.swing.JComboBox<String> cbDesStatus;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -654,6 +805,7 @@ public class AddGame extends javax.swing.JPanel {
     private javax.swing.JLabel lbAddName;
     private javax.swing.JLabel lbAddName1;
     private javax.swing.JLabel lbAddQuantity;
+    private javax.swing.JLabel lbAddStatus;
     private javax.swing.JLabel lbCategory;
     private javax.swing.JLabel lbDesCategory;
     private javax.swing.JLabel lbDesDescription;
@@ -675,7 +827,6 @@ public class AddGame extends javax.swing.JPanel {
     private javax.swing.JTextField txtDesName;
     private javax.swing.JTextField txtDesPrice;
     private javax.swing.JTextField txtDesQuantity;
-    private javax.swing.JTextField txtDesStatus;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

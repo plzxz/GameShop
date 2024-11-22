@@ -28,4 +28,24 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
+    
+    public static Connection connected() { //static Connection connect() 
+
+        Connection acon = null;
+        
+        try {
+            Path currentRelativePath = Paths.get("");
+            String dbPath = currentRelativePath.toAbsolutePath().toString() + "/GameShopDatabase.accdb";
+            String url = "jdbc:ucanaccess://" + dbPath;
+
+            acon = DriverManager.getConnection(url);
+            System.out.println("Connection established"); // change
+        }catch (SQLException e) {
+            System.out.println("Failed to connect to the database.");
+            e.printStackTrace();
+        }
+        
+        return acon;
+    }
+    
 }

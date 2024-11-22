@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionListener;
 public class AddOrder extends javax.swing.JPanel {
 
     Game game;
+    int EmpID = 0;
     /**
      * Creates new form Order
      */
@@ -51,7 +52,19 @@ public class AddOrder extends javax.swing.JPanel {
         }
     }
     
-    public void update() {
+    public void updateTable() {
+        tblStock.setModel(new GameTable().getModel(null));
+    }
+    
+    public void updateSearch() {
+        searchGame();
+    }
+    
+    public void setEmpID(int id) {
+        this.EmpID = id;
+    }
+    
+    public void updateCB() {
         cbCategory.setModel(new ModelCombox().getModel("category","category_name"));
     }
     
