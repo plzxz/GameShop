@@ -4,6 +4,12 @@
  */
 package main;
 
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import util.Member;
+import util.MemberDA;
+import util.MemberTable;
+
 /**
  *
  * @author Pete
@@ -16,6 +22,66 @@ public class AddMember extends javax.swing.JPanel {
     public AddMember() {
         initComponents();
         
+    }
+    
+    public void UpdateRow() {
+        int rowCount = tblMember.getRowCount();
+        txtDesRowCount.setText(rowCount + "");
+    }
+    
+    public void updateTable() {
+        tblMember.setModel(new MemberTable().getModel(null));
+    }
+    
+    public void updateSearch() {
+        ArrayList<Object> data = new ArrayList<>();
+        String sql = "";
+        
+        if(!txtID.getText().isBlank()) {
+            sql += " AND customer_ID= ?";
+            data.add(txtID.getText());
+        }
+        if(!txtFname.getText().isBlank()) {
+            sql += " AND Cus_Fname= ?";
+            data.add(txtFname.getText());
+        }
+
+        Object[] aData = new Object[]{sql,data};
+        
+        if(sql.isBlank()) {
+            tblMember.setModel(new MemberTable().getModel(null));
+        }else {
+            tblMember.setModel(new MemberTable().getModel(aData));
+        }
+        
+        UpdateRow();
+    }
+    
+    public void addNewMember() {
+        
+        String fName = txtAddFname.getText();
+        String lName = txtAddLname.getText();
+        String cont = txtAddEmail.getText();
+        
+        Member aMember = new Member(0, fName, lName, cont);
+        
+        new MemberDA().addMember(aMember);
+        
+    }
+    
+    public void clearAdd() {
+        txtAddFname.setText("");
+        txtAddLname.setText("");
+        txtAddEmail.setText("");
+    }
+    
+    public boolean isAddFilled() {
+        if(!(txtAddFname.getText().isBlank()&&txtAddLname.getText().isBlank()&&txtAddEmail.getText().isBlank())) {
+            return true;
+        }else {
+            JOptionPane.showMessageDialog(AddPane, "form not filled.", "Warning", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
     }
 
     /**
@@ -55,29 +121,54 @@ public class AddMember extends javax.swing.JPanel {
         AddPane.setBackground(new java.awt.Color(255, 255, 255));
         AddPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        btnAddClear.setText("Clear");
         btnAddClear.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAddClear.setText("Clear");
+        btnAddClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddClearActionPerformed(evt);
+            }
+        });
 
-        btnAdd.setText("Add");
         btnAdd.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
-        lbAddFname.setText("First Name :");
         lbAddFname.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbAddFname.setText("First Name :");
 
         txtAddFname.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtAddFname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAddFnameActionPerformed(evt);
+            }
+        });
 
-        lbAdd.setText("Add");
         lbAdd.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbAdd.setText("Add");
 
-        lbAddLname.setText("Last Name : ");
         lbAddLname.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbAddLname.setText("Last Name : ");
 
         txtAddLname.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtAddLname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAddLnameActionPerformed(evt);
+            }
+        });
 
-        lbAddEmail.setText("Email :");
         lbAddEmail.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbAddEmail.setText("Email :");
 
         txtAddEmail.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtAddEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAddEmailActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout AddPaneLayout = new javax.swing.GroupLayout(AddPane);
         AddPane.setLayout(AddPaneLayout);
@@ -137,8 +228,8 @@ public class AddMember extends javax.swing.JPanel {
         DescriptionPane.setBackground(new java.awt.Color(255, 255, 255));
         DescriptionPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        lbEditId.setText("Row : ");
         lbEditId.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbEditId.setText("Row : ");
 
         txtDesRowCount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         txtDesRowCount.setEditable(false);
@@ -175,6 +266,7 @@ public class AddMember extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblMember.setModel(new MemberTable().getModel(null));
         tblMember.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblMember.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblMember.getTableHeader().setReorderingAllowed(false);
@@ -183,21 +275,36 @@ public class AddMember extends javax.swing.JPanel {
 
         HeaderPane.setBackground(new java.awt.Color(255, 255, 255));
 
-        lbPanalName.setText("Member");
         lbPanalName.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lbPanalName.setText("Member");
 
-        lbID.setText("ID : ");
         lbID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbID.setText("ID : ");
 
         txtID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIDActionPerformed(evt);
+            }
+        });
 
-        btnSearch.setText("Serach");
         btnSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnSearch.setText("Serach");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         lbFname.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbFname.setText("First Name :");
 
         txtFname.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtFname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFnameActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout HeaderPaneLayout = new javax.swing.GroupLayout(HeaderPane);
         HeaderPane.setLayout(HeaderPaneLayout);
@@ -262,6 +369,47 @@ public class AddMember extends javax.swing.JPanel {
                     .addComponent(AddPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        updateSearch();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void txtAddFnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddFnameActionPerformed
+        txtAddLname.requestFocus();
+    }//GEN-LAST:event_txtAddFnameActionPerformed
+
+    private void txtAddLnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddLnameActionPerformed
+        txtAddEmail.requestFocus();
+    }//GEN-LAST:event_txtAddLnameActionPerformed
+
+    private void txtAddEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddEmailActionPerformed
+        btnAddActionPerformed(evt);
+    }//GEN-LAST:event_txtAddEmailActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if(isAddFilled()) {
+            try {
+                addNewMember();
+                clearAdd();
+                updateTable();
+
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnAddClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddClearActionPerformed
+        clearAdd();
+    }//GEN-LAST:event_btnAddClearActionPerformed
+
+    private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
+        updateSearch();
+    }//GEN-LAST:event_txtIDActionPerformed
+
+    private void txtFnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFnameActionPerformed
+        updateSearch();
+    }//GEN-LAST:event_txtFnameActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

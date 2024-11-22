@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,7 +20,7 @@ public class MemberTable { //copy for another table
     
     private Connection conn = DBConnection.conn; //change
     
-    public DefaultTableModel getModel() {
+    public DefaultTableModel getModel(Object[] data) {
     
         DefaultTableModel model = new DefaultTableModel(){
             @Override
@@ -28,8 +29,23 @@ public class MemberTable { //copy for another table
             }
         };
         
-        String sql = "SELECT Customer_ID AS ID, Cus_Fname AS [First Name], Cus_Lname AS[Last Name], Cus_contact AS [Contact] FROM [Customer]";
+        ArrayList<Object> aData = new ArrayList<>();
+        
+        String sql = "SELECT customer_ID AS ID, Cus_Fname AS [First Name], Cus_Lname AS [Last Name], Cus_contact AS Contact FROM customer WHERE 1=1 ";
+        
+        if(data != null) {
+            sql += data[0];
+            aData = (ArrayList<Object>)data[1];
+        }
+        
         try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            if(data != null) {
+                for (int i = 0; i < aData.size(); i++) {
+                    stmt.setObject(i + 1, aData.get(i));
+                }
+            }
+            
             ResultSet rs = stmt.executeQuery();
             ResultSetMetaData meta = rs.getMetaData();
             

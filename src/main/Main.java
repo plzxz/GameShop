@@ -75,7 +75,8 @@ public class Main extends javax.swing.JFrame {
         miExit = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(1630, 919));
+        setMinimumSize(new java.awt.Dimension(1646, 936));
+        setSize(1646, 936);
 
         buttonPane.setBackground(new java.awt.Color(255, 255, 255));
         buttonPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -279,7 +280,7 @@ public class Main extends javax.swing.JFrame {
     private void btnGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGameActionPerformed
 CardLayout card = (CardLayout)ccPane.getLayout();
         card.show(ccPane, "Game");
-        GamePane.updateGameData();
+        GamePane.searchGame();
     }//GEN-LAST:event_btnGameActionPerformed
 
     private void miOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOrderActionPerformed

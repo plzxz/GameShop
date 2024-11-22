@@ -140,7 +140,7 @@ public class AddGame extends javax.swing.JPanel {
         cbDesCategory.setEnabled(true);
     }
     
-    private void searchGame() {
+    public void searchGame() {
         ArrayList<Object> data = new ArrayList<>();
         String sql = "";
         
