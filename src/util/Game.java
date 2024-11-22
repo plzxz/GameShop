@@ -20,6 +20,10 @@ public class Game {
     private double price;
     
     
+    public Game() {
+    
+    }
+    
         
     public Game(int id, String gId, int catId, String name, String des, int quantity, String status, double price) {
         setId(id);

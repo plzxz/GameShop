@@ -39,6 +39,7 @@ public class Employee {
         setBirthDate(birthDate);
         setTel(tel);
         setEmail(email);
+        setCity(city);
         setAddress(address);
         setZipCode(zip);
         setPass(pass);

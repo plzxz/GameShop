@@ -16,6 +16,10 @@ public class Member {
     private String contact;
     
     
+    public Member() {
+    
+    }
+    
     public Member(int id, String fName, String lName, String contact) {
         setId(id);
         setFname(fName);

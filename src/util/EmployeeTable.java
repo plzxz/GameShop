@@ -9,8 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-import org.hsqldb.result.ResultMetaData;
 
 /**
  *
@@ -20,7 +20,7 @@ public class EmployeeTable { //copy for another table
     
     private Connection conn = DBConnection.conn; //change
     
-    public DefaultTableModel getModel() {
+    public DefaultTableModel getModel(Object[] data) {
     
         DefaultTableModel model = new DefaultTableModel(){
             @Override
@@ -29,8 +29,24 @@ public class EmployeeTable { //copy for another table
             }
         };
         
-        String sql = "SELECT EMP_ID AS ID, Rank, First_Name AS [First Name], Last_Name AS [Last Name], Emp_Tel AS Tel, Emp_Email AS Email FROM [employee]";
+        ArrayList<Object> aData = new ArrayList<>();
+        
+        String sql = "SELECT EMP_ID AS ID, Rank, First_Name AS [First Name], Last_Name AS [Last Name], Emp_Tel AS Tel, Emp_Email AS Email FROM [employee] WHERE 1=1";
+        
+        if(data != null) {
+            sql += data[0];
+            aData = (ArrayList<Object>)data[1];
+        }
+        
         try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            if(data != null) {
+                for (int i = 0; i < aData.size(); i++) {
+                    stmt.setObject(i + 1, aData.get(i));
+                }
+            }
+            
+            
             ResultSet rs = stmt.executeQuery();
             ResultSetMetaData meta = rs.getMetaData();
             

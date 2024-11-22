@@ -22,7 +22,7 @@ public class MemberDA {
     
     public Member getData(int id) {
         
-        Member member = new Member(0, null, null, null);
+        Member member = new Member();
         
         String sql = "SELECT * FROM customer WHERE customer_ID= ?";
         
@@ -60,7 +60,7 @@ public class MemberDA {
                 stmt.setString(3, member.getContact());
                 
                 stmt.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Add Product successfully.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Add Member successfully.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 
             }catch(SQLException e) {
                 JOptionPane.showMessageDialog(null, "Something wrong.", "Warning", JOptionPane.ERROR_MESSAGE);

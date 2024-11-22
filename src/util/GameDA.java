@@ -22,7 +22,7 @@ public class GameDA {
     
     public Game getGameData(String id) {
         
-        Game game = new Game(0,null,0,null,null,0,null,0);
+        Game game = new Game();
         
         String sql = "SELECT * FROM product WHERE Game_ID= ?";
         

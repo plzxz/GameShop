@@ -320,6 +320,7 @@ CardLayout card = (CardLayout)ccPane.getLayout();
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         parent.setVisible(true);
+        parent.PassUnVis();
         this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
