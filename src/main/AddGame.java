@@ -78,7 +78,9 @@ public class AddGame extends javax.swing.JPanel {
         game.setQuantity(Integer.parseInt(txtDesQuantity.getText()));
         game.setPrice(Double.parseDouble(txtDesPrice.getText()));
         
-        new GameDA().updateGame(game);
+        if(new GameDA().updateGame(game)) {
+            JOptionPane.showMessageDialog(null, "Update product successfully.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
         
     }
     

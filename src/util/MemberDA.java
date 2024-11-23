@@ -48,6 +48,31 @@ public class MemberDA {
         
     }
     
+    public boolean isMember(int id) {
+    
+        String sql = "SELECT 1 FROM customer WHERE customer_ID= ?";
+        
+        try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, id);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if(rs.next()) {
+                return true;
+            }
+            
+            JOptionPane.showMessageDialog(null, "Member id not found..", "Info", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+
+        }catch(SQLException e) {
+            JOptionPane.showMessageDialog(null, "Something wrong.", "Warning", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+    
     public void addMember(Member member) {
             
             

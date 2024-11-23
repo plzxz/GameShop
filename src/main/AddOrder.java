@@ -10,6 +10,7 @@ import util.*;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -20,6 +21,11 @@ public class AddOrder extends javax.swing.JPanel {
 
     Game game;
     int EmpID = 0;
+    double aTotal = 0;
+    double discount = 0;
+    
+    Bill aBill;
+    
     /**
      * Creates new form Order
      */
@@ -43,7 +49,7 @@ public class AddOrder extends javax.swing.JPanel {
             txtDesStatus.setText(game.getStatus());
             txtDesQuantity.setText(game.getQuantity()+"");
             txtDesPrice.setText(new DecimalFormat(",###.00").format(game.getPrice()));
-            txtCartQuantity.setText("0");
+            txtCartQuantity.setText("1");
             
             checkQuantity();
         }catch(Exception e) {
@@ -127,6 +133,88 @@ public class AddOrder extends javax.swing.JPanel {
 
     }
     
+    private void clearCart() {
+        ((DefaultTableModel)tblCart.getModel()).setRowCount(0);
+        aTotal = 0;
+        discount = 0;
+        txtCartTotal.setText("");
+        lbCartDisCount.setText("");
+    }
+    
+    private void addCart() {
+    
+        
+        String gID = game.getGameId();
+        String gName = game.getName();
+        int gQ = Integer.parseInt(txtCartQuantity.getText());
+        String gPrice = game.getPrice()+"";
+        
+        
+        ((DefaultTableModel)tblCart.getModel()).addRow(new Object[] {gID, gName, gQ, gPrice});
+        setTotal();
+    }
+    
+    private void setTotal() {
+        
+        int rowCount = tblCart.getRowCount();
+        
+        aTotal = 0;
+        for(int i = 0; i<rowCount; i++) {
+            int aQauntity = Integer.parseInt(tblCart.getValueAt(i, 2).toString());
+            double aPrice = Double.parseDouble(tblCart.getValueAt(i, 3).toString());
+            
+            aTotal += aQauntity * aPrice;
+        }
+        
+        discount = 0;
+        
+        if(!txtCartMember.getText().equals("1") && !txtCartMember.getText().isBlank()) {
+            discount = aTotal * 0.15;
+            lbCartDisCount.setText("  -"+new DecimalFormat(",###.00").format(discount));
+            aTotal -= discount;
+        }else {
+            lbCartDisCount.setText("");
+        }
+  
+        txtCartTotal.setText(new DecimalFormat(",###.00").format(aTotal));
+    }
+    
+    
+    private void processOrder() {
+        
+        if(txtCartMember.getText().isBlank()) {
+            txtCartMember.setText("1");
+        }
+        
+        int rowCount = tblCart.getRowCount();
+
+        Member mem = new MemberDA().getData(Integer.parseInt(txtCartMember.getText()));
+        Employee emm = new EmployeeDA().getData(EmpID);
+        ArrayList<Game> aGame = new ArrayList<>();
+        java.sql.Date date = java.sql.Date.valueOf(java.time.LocalDate.now());
+        double billTotal = aTotal;
+
+        ArrayList<Integer> amount = new ArrayList<>();
+        
+        
+        for(int i = 0; i < rowCount; i++) {
+            
+            aGame.add(new GameDA().getGameData(tblCart.getValueAt(i, 0).toString()));
+            amount.add(Integer.valueOf(tblCart.getValueAt(i, 2).toString()));
+            
+            int cal = aGame.get(i).getQuantity() - amount.get(i);
+            aGame.get(i).setQuantity(cal);
+            
+        }
+        
+        aBill = new Bill(mem, emm, aGame, amount, date, aTotal, discount);
+        
+
+        new BillDA().addBill(aBill);
+    }
+    
+    
+    
     
     private void setTableSelection() {
         tblStock.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -178,6 +266,8 @@ public class AddOrder extends javax.swing.JPanel {
         btnCartClear = new javax.swing.JButton();
         txtCartTotal = new javax.swing.JTextField();
         lbCartTotal = new javax.swing.JLabel();
+        lbCartMemCheck = new javax.swing.JLabel();
+        lbCartDisCount = new javax.swing.JLabel();
         DescriptionPane = new javax.swing.JPanel();
         lbDesName = new javax.swing.JLabel();
         txtDesName = new javax.swing.JTextField();
@@ -209,21 +299,25 @@ public class AddOrder extends javax.swing.JPanel {
 
         tblCart.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Game id", "Game Name", "Quantity", "price"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tblCart.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -260,32 +354,79 @@ public class AddOrder extends javax.swing.JPanel {
 
         btnCartAdd.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartAdd.setText("Add");
+        btnCartAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartAddActionPerformed(evt);
+            }
+        });
 
         btnCartRemove.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartRemove.setText("Remove");
+        btnCartRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartRemoveActionPerformed(evt);
+            }
+        });
 
         lbCartMember.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbCartMember.setText("Membership :");
 
         txtCartMember.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtCartMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCartMemberActionPerformed(evt);
+            }
+        });
 
         btnCartMember.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnCartMember.setText("placeHolder");
+        btnCartMember.setText("Check Member");
+        btnCartMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartMemberActionPerformed(evt);
+            }
+        });
 
         btnCartPrint.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartPrint.setText("Print Receipt");
+        btnCartPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartPrintActionPerformed(evt);
+            }
+        });
 
         btnCartProcess.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartProcess.setText("Proccess");
+        btnCartProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartProcessActionPerformed(evt);
+            }
+        });
 
         btnCartClear.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCartClear.setText("Clear");
+        btnCartClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartClearActionPerformed(evt);
+            }
+        });
 
         txtCartTotal.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         txtCartTotal.setEditable(false);
 
         lbCartTotal.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbCartTotal.setText("Total : ");
+
+        lbCartMemCheck.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbCartMemCheck.setToolTipText("");
+        lbCartMemCheck.setMaximumSize(new java.awt.Dimension(32, 32));
+        lbCartMemCheck.setMinimumSize(new java.awt.Dimension(32, 32));
+        lbCartMemCheck.setPreferredSize(new java.awt.Dimension(32, 32));
+
+        lbCartDisCount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbCartDisCount.setMaximumSize(new java.awt.Dimension(97, 28));
+        lbCartDisCount.setMinimumSize(new java.awt.Dimension(97, 28));
+        lbCartDisCount.setName(""); // NOI18N
+        lbCartDisCount.setPreferredSize(new java.awt.Dimension(97, 28));
 
         javax.swing.GroupLayout CartPaneLayout = new javax.swing.GroupLayout(CartPane);
         CartPane.setLayout(CartPaneLayout);
@@ -296,36 +437,41 @@ public class AddOrder extends javax.swing.JPanel {
                 .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(CartPaneLayout.createSequentialGroup()
                         .addGap(46, 46, 46)
-                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(CartPaneLayout.createSequentialGroup()
+                                    .addComponent(btnCartAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnCartRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(CartPaneLayout.createSequentialGroup()
+                                    .addComponent(lbCartQuantity)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtCartQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnCartPlus)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnCartMinus))
+                                .addGroup(CartPaneLayout.createSequentialGroup()
+                                    .addGap(43, 43, 43)
+                                    .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnCartPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnCartMember, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnCartProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnCartClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(CartPaneLayout.createSequentialGroup()
                                 .addComponent(lbCartMember)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtCartMember))
-                            .addGroup(CartPaneLayout.createSequentialGroup()
-                                .addComponent(btnCartAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnCartRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(CartPaneLayout.createSequentialGroup()
-                                .addComponent(lbCartQuantity)
+                                .addComponent(txtCartMember, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtCartQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCartPlus)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCartMinus))
-                            .addGroup(CartPaneLayout.createSequentialGroup()
-                                .addGap(43, 43, 43)
-                                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnCartPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnCartMember, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnCartProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(btnCartClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(lbCartMemCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(CartPaneLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lbCartTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCartTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(67, Short.MAX_VALUE))
+                        .addComponent(txtCartTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbCartDisCount, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         CartPaneLayout.setVerticalGroup(
             CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,21 +480,25 @@ public class AddOrder extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbCartTotal)
-                    .addComponent(txtCartTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCartTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbCartDisCount, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(48, 48, 48)
-                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbCartQuantity)
-                    .addComponent(txtCartQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCartPlus)
-                    .addComponent(btnCartMinus))
-                .addGap(18, 18, 18)
-                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCartAdd)
-                    .addComponent(btnCartRemove))
-                .addGap(18, 18, 18)
-                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbCartMember)
-                    .addComponent(txtCartMember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(CartPaneLayout.createSequentialGroup()
+                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbCartQuantity)
+                            .addComponent(txtCartQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCartPlus)
+                            .addComponent(btnCartMinus))
+                        .addGap(18, 18, 18)
+                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCartAdd)
+                            .addComponent(btnCartRemove))
+                        .addGap(18, 18, 18)
+                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbCartMember)
+                            .addComponent(txtCartMember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbCartMemCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCartMember)
                 .addGap(33, 33, 33)
@@ -642,9 +792,54 @@ public class AddOrder extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnCartMinusActionPerformed
 
-    
-    
-    
+    private void btnCartAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartAddActionPerformed
+        if(!txtCartQuantity.getText().equals("0")) {
+            addCart();
+        }
+        
+    }//GEN-LAST:event_btnCartAddActionPerformed
+
+    private void btnCartRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartRemoveActionPerformed
+        try{
+            int selectRow = tblCart.getSelectedRow();
+            ((DefaultTableModel)tblCart.getModel()).removeRow(selectRow);
+            setTotal();
+        }catch(IndexOutOfBoundsException e) {
+//            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnCartRemoveActionPerformed
+
+    private void txtCartMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCartMemberActionPerformed
+        btnCartMemberActionPerformed(evt);
+    }//GEN-LAST:event_txtCartMemberActionPerformed
+
+    private void btnCartMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartMemberActionPerformed
+        
+        if(new MemberDA().isMember(Integer.parseInt(txtCartMember.getText()))) {
+            lbCartMemCheck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/accept.png")));
+            setTotal();
+        }else {
+            lbCartMemCheck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/remove.png")));
+            txtCartMember.setText("");
+        }
+    }//GEN-LAST:event_btnCartMemberActionPerformed
+
+    private void btnCartProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartProcessActionPerformed
+        processOrder();
+    }//GEN-LAST:event_btnCartProcessActionPerformed
+
+    private void btnCartPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartPrintActionPerformed
+        
+    }//GEN-LAST:event_btnCartPrintActionPerformed
+
+    private void btnCartClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartClearActionPerformed
+        clearCart();
+        cartQA = 0;
+        txtCartQuantity.setText("");
+        txtCartMember.setText("");
+        lbCartMemCheck.setIcon(null);
+    }//GEN-LAST:event_btnCartClearActionPerformed
+  
     private void stockSelectionPerformed(ListSelectionEvent evt) {
         try{
         if (!evt.getValueIsAdjusting()) {
@@ -685,6 +880,8 @@ public class AddOrder extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lbCartDisCount;
+    private javax.swing.JLabel lbCartMemCheck;
     private javax.swing.JLabel lbCartMember;
     private javax.swing.JLabel lbCartQuantity;
     private javax.swing.JLabel lbCartTotal;

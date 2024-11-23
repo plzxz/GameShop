@@ -31,7 +31,7 @@ public class ReportTable { //copy for another table
         
         ArrayList<Object> aData = new ArrayList<>();
         
-        String sql = "SELECT Bill_ID AS ID, Dill_Date AS Date, customer_ID AS C_ID, First_Name AS Employee, product_name AS Game, category_name AS Category, product_price AS Price, Amount, Total_price AS Total " +
+        String sql = "SELECT Bill_ID AS ID, Dill_Date AS Date, customer_ID AS C_ID, First_Name AS Employee, product_name AS Game, category_name AS Category, product_price AS Price, Amount, Discount, Total_price AS Total " +
                      "FROM employee INNER JOIN (customer INNER JOIN (Bill INNER JOIN ((category INNER JOIN product ON category.category_ID = product.Category_ID) INNER JOIN Bill_detail ON product.product_ID ="+
                      " Bill_detail.product_ID) ON Bill.Bill_ID = Bill_detail.Bill_ID) ON customer.customer_ID = Bill.C_ID) ON employee.EMP_ID = Bill.EMP_ID WHERE 1=1";
               
@@ -59,7 +59,14 @@ public class ReportTable { //copy for another table
             while(rs.next()) {
                 Object[] row = new Object[columCount];
                 for(int i = 1; i <= columCount; i++) {
-                    row[i - 1] = rs.getObject(i);
+                    if(i-1 == 1) {
+                        row[i -1] = rs.getDate(i);
+                    }else if(i-1 == 6||i-1 == 8 || i-1 ==9) {
+                        row[i - 1] = rs.getDouble(i);
+                    }else {
+                        row[i - 1] = rs.getObject(i);
+                    }
+                    
                 }
                 model.addRow(row);
             }

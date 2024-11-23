@@ -6,6 +6,8 @@ package main;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import util.*;
 
 /**
@@ -29,11 +31,21 @@ public class ViewReport extends javax.swing.JPanel {
     }
     
     public void UpdateTotal() {
+        
+        Set<String> countId = new HashSet<>();
+        double total = 0;
         int rowCount = tblReport.getRowCount();
         txtRowCount.setText(rowCount+"");
-        double total = 0;
+        
         for(int i = 0; i<rowCount ; i++) {
-            total += Double.parseDouble(tblReport.getValueAt(i, 6).toString());
+            
+            String id = tblReport.getValueAt(i, 0).toString();
+            double countTotal = Double.parseDouble(tblReport.getValueAt(i, 9).toString());
+            
+            if(!countId.contains(id)) {
+                countId.add(id);
+                total += countTotal;
+            }
         }
         txtTotal.setText(new DecimalFormat(",###.00").format(total));
     }
@@ -109,14 +121,14 @@ public class ViewReport extends javax.swing.JPanel {
         DescriptionPane.setBackground(new java.awt.Color(255, 255, 255));
         DescriptionPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        lbRow.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbRow.setText("row :");
+        lbRow.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         txtRowCount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         txtRowCount.setEditable(false);
 
-        lbTotal.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbTotal.setText("Total : ");
+        lbTotal.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         txtTotal.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         txtTotal.setEditable(false);
@@ -170,11 +182,11 @@ public class ViewReport extends javax.swing.JPanel {
 
         HeaderPane.setBackground(new java.awt.Color(255, 255, 255));
 
-        lbPanalName.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lbPanalName.setText("Report");
+        lbPanalName.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
-        lbGameID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbGameID.setText("Game ID :");
+        lbGameID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         txtGameID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtGameID.addActionListener(new java.awt.event.ActionListener() {
@@ -183,16 +195,16 @@ public class ViewReport extends javax.swing.JPanel {
             }
         });
 
-        btnSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSearch.setText("Serach");
+        btnSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
             }
         });
 
-        cbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cbCategory.setModel(new ModelCombox().getModel("category", "category_name"));
         cbCategory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -200,11 +212,11 @@ public class ViewReport extends javax.swing.JPanel {
             }
         });
 
-        lbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbCategory.setText("Category :");
+        lbCategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        lbGameName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbGameName.setText("Employee ID : ");
+        lbGameName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         txtEmployeeID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtEmployeeID.addActionListener(new java.awt.event.ActionListener() {
@@ -213,8 +225,8 @@ public class ViewReport extends javax.swing.JPanel {
             }
         });
 
-        lbMemberID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbMemberID.setText("Member ID :");
+        lbMemberID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         txtMemberID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtMemberID.addActionListener(new java.awt.event.ActionListener() {
