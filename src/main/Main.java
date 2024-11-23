@@ -39,6 +39,12 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
+    private void updateCB() {
+        OrderPane.updateCB();
+        GamePane.updateCB();
+        ReportPane.updateCB();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -204,6 +210,11 @@ public class Main extends javax.swing.JFrame {
 
         miCategory.setText("Add Categories");
         mMenu.add(miCategory);
+        miCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miCategoryActionPerformed(evt);
+            }
+        });
 
         miEmp.setText("Employee");
         miEmp.addActionListener(new java.awt.event.ActionListener() {
@@ -270,6 +281,7 @@ public class Main extends javax.swing.JFrame {
         CardLayout card = (CardLayout)ccPane.getLayout();
         card.show(ccPane, "Order");
         OrderPane.updateSearch();
+        updateCB();
     }//GEN-LAST:event_btnOrderActionPerformed
 
     private void btnMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMemberActionPerformed
@@ -297,6 +309,10 @@ CardLayout card = (CardLayout)ccPane.getLayout();
 
     private void miEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpActionPerformed
         btnEmployeeActionPerformed(evt);
+    }//GEN-LAST:event_miEmpActionPerformed
+    
+    private void miCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpActionPerformed
+        new AddCategory().setVisible(true);
     }//GEN-LAST:event_miEmpActionPerformed
 
     private void miReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miReportActionPerformed

@@ -30,7 +30,7 @@ public class AddGame extends javax.swing.JPanel {
         lockGameData();
     }
     
-    private void updateCB() {
+    public void updateCB() {
         cbCategory.setModel(new ModelCombox().getModel("category", "category_name"));
         cbAddCategory.setModel(new ModelCombox().getModel("category", "category_name"));
         cbDesCategory.setModel(new ModelCombox().getModel("category", "category_name"));
@@ -182,6 +182,31 @@ public class AddGame extends javax.swing.JPanel {
         }
     }
     
+    private boolean isEditFilled() {
+        if(!txtDesId.getText().isBlank() && !txtDesName.getText().isBlank() && !txtDesPrice.getText().isBlank() &&!txtDesQuantity.getText().isBlank()) {
+            
+            if(!isNumber(txtDesPrice.getText())) {
+                JOptionPane.showMessageDialog(AddPane, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if(!isNumber(txtDesQuantity.getText())) {
+                JOptionPane.showMessageDialog(AddPane, "Quantity is not number", "Warning", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if(cbDesCategory.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(AddPane, "Not select Category.", "Warning", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(AddPane, "Form is not filled", "Warning", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+    
     private boolean isAddFilled() {
         if(!(txtAddId.getText().isBlank()&&txtAddName.getText().isBlank()&&txtAddQuantity.getText().isBlank()&&txtAddPrice.getText().isBlank()&&txtAddQuantity.getText().isBlank()&cbAddCategory.getSelectedIndex()==0)) {
             
@@ -193,10 +218,10 @@ public class AddGame extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(AddPane, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            
 
             return true;
         }else {
+            JOptionPane.showMessageDialog(AddPane, "Form is not filled", "Warning", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -705,8 +730,10 @@ public class AddGame extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnDesUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesUpdateActionPerformed
-        updateGameData();
-        searchGame();
+        if(isEditFilled()) {
+            updateGameData();
+            searchGame();
+        }
     }//GEN-LAST:event_btnDesUpdateActionPerformed
 
     private void btnAddClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddClearActionPerformed

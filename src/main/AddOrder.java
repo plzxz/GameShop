@@ -139,6 +139,8 @@ public class AddOrder extends javax.swing.JPanel {
         discount = 0;
         txtCartTotal.setText("");
         lbCartDisCount.setText("");
+        aBill = null;
+        lockCart();
     }
     
     private void addCart() {
@@ -192,7 +194,6 @@ public class AddOrder extends javax.swing.JPanel {
         Employee emm = new EmployeeDA().getData(EmpID);
         ArrayList<Game> aGame = new ArrayList<>();
         java.sql.Date date = java.sql.Date.valueOf(java.time.LocalDate.now());
-        double billTotal = aTotal;
 
         ArrayList<Integer> amount = new ArrayList<>();
         
@@ -211,8 +212,32 @@ public class AddOrder extends javax.swing.JPanel {
         
 
         new BillDA().addBill(aBill);
+        updateSearch();
+        lockCart();
     }
     
+    
+    public void lockCart() {
+        if(aBill != null) {
+            txtCartQuantity.setEditable(false);
+            txtCartMember.setEditable(false);
+            btnCartAdd.setEnabled(false);
+            btnCartRemove.setEnabled(false);
+            btnCartPlus.setEnabled(false);
+            btnCartMinus.setEnabled(false);
+            btnCartMember.setEnabled(false);
+            btnCartProcess.setEnabled(false);
+        }else{
+            txtCartQuantity.setEditable(true);
+            txtCartMember.setEditable(true);
+            btnCartAdd.setEnabled(true);
+            btnCartRemove.setEnabled(true);
+            btnCartPlus.setEnabled(true);
+            btnCartMinus.setEnabled(true);
+            btnCartMember.setEnabled(true);
+            btnCartProcess.setEnabled(true);
+        }
+    }
     
     
     
@@ -814,22 +839,27 @@ public class AddOrder extends javax.swing.JPanel {
     }//GEN-LAST:event_txtCartMemberActionPerformed
 
     private void btnCartMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartMemberActionPerformed
-        
-        if(new MemberDA().isMember(Integer.parseInt(txtCartMember.getText()))) {
-            lbCartMemCheck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/accept.png")));
-            setTotal();
-        }else {
-            lbCartMemCheck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/remove.png")));
-            txtCartMember.setText("");
+        if(txtCartMember.getText().isBlank()) {
+            if(new MemberDA().isMember(Integer.parseInt(txtCartMember.getText()))) {
+                lbCartMemCheck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/accept.png")));
+                setTotal();
+            }else {
+                lbCartMemCheck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/remove.png")));
+                txtCartMember.setText("");
+            }
         }
     }//GEN-LAST:event_btnCartMemberActionPerformed
 
     private void btnCartProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartProcessActionPerformed
-        processOrder();
+        if(tblCart.getRowCount() != 0) {
+            processOrder();
+        }
     }//GEN-LAST:event_btnCartProcessActionPerformed
 
     private void btnCartPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartPrintActionPerformed
-        
+        if(aBill != null) {
+            new PrintReceipt(aBill).setLocationRelativeTo(CartPane);
+        }
     }//GEN-LAST:event_btnCartPrintActionPerformed
 
     private void btnCartClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartClearActionPerformed

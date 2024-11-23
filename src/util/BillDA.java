@@ -27,7 +27,7 @@ public class BillDA {
         ArrayList<Game> aGame = new ArrayList<>();
         ArrayList<Integer> amount = new ArrayList<>();
         
-        String sql = "SELECT Bill.*, Amount FROM Bill INNER JOIN Bill_detail ON Bill.Bill_ID = Bill_detail.Bill_ID WHERE Bill_ID= ?";
+        String sql = "SELECT Bill.*, Bill_detail.* FROM Bill INNER JOIN Bill_detail ON Bill.Bill_ID = Bill_detail.Bill_ID WHERE Bill_ID= ?";
         
         try(PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -43,7 +43,7 @@ public class BillDA {
                 
                 do {
                     
-                    aGame.add(new GameDA().getGame(rs.getInt("Product_ID")));
+                    aGame.add(new GameDA().getGame(rs.getInt("product_ID")));
                     amount.add(rs.getInt("amount"));
 
                 }while(rs.next());

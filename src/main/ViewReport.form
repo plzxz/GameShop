@@ -62,6 +62,10 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="txtRowCount" min="-2" pref="76" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="lbDiscount" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="txtDiscount" min="-2" pref="120" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="lbTotal" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="txtTotal" min="-2" pref="155" max="-2" attributes="0"/>
@@ -72,11 +76,15 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="26" max="32767" attributes="0"/>
+                  <EmptySpace pref="33" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="lbTotal" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtTotal" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                          <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                              <Component id="lbDiscount" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtDiscount" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lbRow" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -123,6 +131,24 @@
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="txtTotal.setEditable(false);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbDiscount">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="16" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Discount  : "/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDiscount">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="16" style="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="txtDiscount.setEditable(false);"/>
           </AuxValues>
         </Component>
       </SubComponents>
@@ -199,7 +225,10 @@
                           <EmptySpace pref="61" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="btnSearch" min="-2" pref="150" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="btnSearch" min="-2" pref="150" max="-2" attributes="0"/>
+                      <Component id="btnPrint" min="-2" pref="150" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -208,8 +237,16 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lbPanalName" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="lbPanalName" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="btnPrint" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lbGameID" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtGameID" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -341,6 +378,17 @@
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnPrint">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="14" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Print receipt"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
