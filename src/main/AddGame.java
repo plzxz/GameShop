@@ -72,7 +72,7 @@ public class AddGame extends javax.swing.JPanel {
         
         game.setGameId(txtDesId.getText());
         game.setName(txtDesName.getText());
-        game.setDes(txtAAddDescription.getText());
+        game.setDes(txtADescription.getText());
         game.setCatId(cbDesCategory.getSelectedIndex());
         game.setStatus(cbDesStatus.getSelectedItem().toString());
         game.setQuantity(Integer.parseInt(txtDesQuantity.getText()));
@@ -182,10 +182,18 @@ public class AddGame extends javax.swing.JPanel {
         }
     }
     
+    private boolean isDouble(String str) {
+        if(str.matches("\\d+\\.\\d+")) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
     private boolean isEditFilled() {
         if(!txtDesId.getText().isBlank() && !txtDesName.getText().isBlank() && !txtDesPrice.getText().isBlank() &&!txtDesQuantity.getText().isBlank()) {
             
-            if(!isNumber(txtDesPrice.getText())) {
+            if(!isDouble(txtDesPrice.getText())) {
                 JOptionPane.showMessageDialog(AddPane, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -210,7 +218,7 @@ public class AddGame extends javax.swing.JPanel {
     private boolean isAddFilled() {
         if(!(txtAddId.getText().isBlank()&&txtAddName.getText().isBlank()&&txtAddQuantity.getText().isBlank()&&txtAddPrice.getText().isBlank()&&txtAddQuantity.getText().isBlank()&cbAddCategory.getSelectedIndex()==0)) {
             
-            if(!isNumber(txtAddPrice.getText())) {
+            if(!isDouble(txtAddPrice.getText())) {
                 JOptionPane.showMessageDialog(AddPane, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
