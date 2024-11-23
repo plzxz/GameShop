@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 
@@ -34,6 +35,7 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         this.setResizable(false);
         initComponents();
+        this.setIconImage(new ImageIcon(getClass().getResource("/icon/g.png")).getImage());
         this.setLocationRelativeTo(null);
         txtPassword.setEchoChar('\u2022');
     }

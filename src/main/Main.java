@@ -6,6 +6,7 @@ package main;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.CardLayout;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -24,6 +25,7 @@ public class Main extends javax.swing.JFrame {
         this.rank = rank;
         this.eId = id;
         initComponents(); 
+        this.setIconImage(new ImageIcon(getClass().getResource("/icon/g.png")).getImage());
         this.setSize(1646, 918);
         this.setLocationRelativeTo(null);
         isAdmin();

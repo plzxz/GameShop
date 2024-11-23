@@ -7,6 +7,7 @@ package main;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import javax.swing.ImageIcon;
 import util.*;
 
 /**
@@ -20,6 +21,7 @@ public class PrintReceipt extends javax.swing.JFrame {
      */
     public PrintReceipt() {
         initComponents();
+        this.setIconImage(new ImageIcon(getClass().getResource("/icon/g.png")).getImage());
     }
     
     public PrintReceipt(Bill aBill) {

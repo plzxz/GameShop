@@ -8,6 +8,7 @@ import util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,6 +23,7 @@ public class AddCategory extends javax.swing.JFrame {
      */
     public AddCategory() {
         initComponents();
+        this.setIconImage(new ImageIcon(getClass().getResource("/icon/g.png")).getImage());
         setLocationRelativeTo(null);
     }
     
