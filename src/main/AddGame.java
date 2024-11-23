@@ -76,7 +76,7 @@ public class AddGame extends javax.swing.JPanel {
         game.setCatId(cbDesCategory.getSelectedIndex());
         game.setStatus(cbDesStatus.getSelectedItem().toString());
         game.setQuantity(Integer.parseInt(txtDesQuantity.getText()));
-        game.setPrice(Double.parseDouble(txtDesPrice.getText()));
+        game.setPrice(Double.parseDouble(removeCommas(txtDesPrice.getText())));
         
         if(new GameDA().updateGame(game)) {
             JOptionPane.showMessageDialog(null, "Update product successfully.", "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -92,7 +92,7 @@ public class AddGame extends javax.swing.JPanel {
         String des = txtAAddDescription.getText();
         int qnt = Integer.parseInt(txtAddQuantity.getText());
         String stat = cbAddStatus.getSelectedItem().toString();
-        double price = Double.parseDouble(txtAddPrice.getText());
+        double price = Double.parseDouble(removeCommas(txtAddPrice.getText()));
         
         Game aGame = new Game(0, gID, cID, name, des, qnt, stat, price);
     
@@ -183,34 +183,39 @@ public class AddGame extends javax.swing.JPanel {
     }
     
     private boolean isDouble(String str) {
-        if(str.matches("\\d+\\.\\d+")) {
+        if(str.matches("\\d+(\\.\\d+)?")) {
             return true;
         }else{
             return false;
         }
     }
     
+    private String removeCommas(String str) {
+        String result = str.replace(",", "");
+        return result;
+    }
+    
     private boolean isEditFilled() {
         if(!txtDesId.getText().isBlank() && !txtDesName.getText().isBlank() && !txtDesPrice.getText().isBlank() &&!txtDesQuantity.getText().isBlank()) {
             
-            if(!isDouble(txtDesPrice.getText())) {
-                JOptionPane.showMessageDialog(AddPane, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
+            if(!isDouble(removeCommas(txtDesPrice.getText()))) {
+                JOptionPane.showMessageDialog(this, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             
             if(!isNumber(txtDesQuantity.getText())) {
-                JOptionPane.showMessageDialog(AddPane, "Quantity is not number", "Warning", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Quantity is not number", "Warning", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             
             if(cbDesCategory.getSelectedIndex() == 0) {
-                JOptionPane.showMessageDialog(AddPane, "Not select Category.", "Warning", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Not select Category.", "Warning", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             
             return true;
         }else{
-            JOptionPane.showMessageDialog(AddPane, "Form is not filled", "Warning", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Form is not filled", "Warning", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -218,7 +223,7 @@ public class AddGame extends javax.swing.JPanel {
     private boolean isAddFilled() {
         if(!(txtAddId.getText().isBlank()&&txtAddName.getText().isBlank()&&txtAddQuantity.getText().isBlank()&&txtAddPrice.getText().isBlank()&&txtAddQuantity.getText().isBlank()&cbAddCategory.getSelectedIndex()==0)) {
             
-            if(!isDouble(txtAddPrice.getText())) {
+            if(!isDouble(removeCommas(txtAddPrice.getText()))) {
                 JOptionPane.showMessageDialog(AddPane, "Price is not number", "Warning", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
