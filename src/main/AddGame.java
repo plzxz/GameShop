@@ -89,7 +89,7 @@ public class AddGame extends javax.swing.JPanel {
         String gID = txtAddId.getText();
         String name = txtAddName.getText();
         int cID = cbAddCategory.getSelectedIndex();
-        String des = txtADescription.getText();
+        String des = txtAAddDescription.getText();
         int qnt = Integer.parseInt(txtAddQuantity.getText());
         String stat = cbAddStatus.getSelectedItem().toString();
         double price = Double.parseDouble(txtAddPrice.getText());
