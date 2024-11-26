@@ -22,6 +22,8 @@ public class Bill {
     private Date date;
     private double total;
     private double discount;
+    private double pay;
+    private double change;
     
     public Bill() {
     

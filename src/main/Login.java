@@ -57,6 +57,12 @@ public class Login extends javax.swing.JFrame {
                 if(rs.next()) {
                     rank = rs.getString("Rank");
                     id = rs.getInt("EMP_ID");
+                    
+                if(pass.isBlank()&& !user.isBlank()) {
+                    JOptionPane.showMessageDialog(this, "You don't have permission.");
+                    return false;
+                }
+                    
                     return true;
                 }else {
                     JOptionPane.showMessageDialog(this, "UserName or Password is incorrect.", "Warning", JOptionPane.ERROR_MESSAGE);

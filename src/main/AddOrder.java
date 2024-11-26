@@ -772,9 +772,11 @@ public class AddOrder extends javax.swing.JPanel {
     private void txtCartQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCartQuantityActionPerformed
         if(isNumber(txtCartQuantity.getText())&& game!= null) {
             int cartQ = Integer.parseInt(txtCartQuantity.getText());
-            if(cartQ>=game.getQuantity()) {
+            if(cartQ>game.getQuantity()) {
                 JOptionPane.showMessageDialog(CartPane, "Out of stock.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 txtCartQuantity.setText(cartQA+"");
+            }else if(cartQ<0) {
+                txtCartQuantity.setText("0");
             }else {
                 cartQA = cartQ;
                 txtCartQuantity.setText(cartQ+"");
@@ -788,9 +790,11 @@ public class AddOrder extends javax.swing.JPanel {
     private void btnCartPlusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartPlusActionPerformed
         if(isNumber(txtCartQuantity.getText())&& game!= null) {
             int cartQ = Integer.parseInt(txtCartQuantity.getText()) + 1;
-            if(cartQ>=game.getQuantity()) {
+            if(cartQ>game.getQuantity()) {
                 JOptionPane.showMessageDialog(CartPane, "Out of stock.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 btnCartPlus.setEnabled(false);
+            }else if(cartQ<0) {
+                txtCartQuantity.setText("0");
             }else {
                 cartQA = cartQ;
                 txtCartQuantity.setText(cartQ+"");
@@ -804,9 +808,11 @@ public class AddOrder extends javax.swing.JPanel {
     private void btnCartMinusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartMinusActionPerformed
         if(isNumber(txtCartQuantity.getText())&& game!= null) {
             int cartQ = Integer.parseInt(txtCartQuantity.getText()) - 1;
-            if(cartQ>=game.getQuantity()) {
+            if(cartQ>game.getQuantity()) {
                 JOptionPane.showMessageDialog(CartPane, "Out of stock.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 btnCartPlus.setEnabled(false);
+            }else if(cartQ<0) {
+                txtCartQuantity.setText("0");
             }else {
                 cartQA = cartQ;
                 txtCartQuantity.setText(cartQ+"");
