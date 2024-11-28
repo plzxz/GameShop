@@ -23,6 +23,8 @@ public class AddOrder extends javax.swing.JPanel {
     int EmpID = 0;
     double aTotal = 0;
     double discount = 0;
+    double cash = 0;
+    double change = 0;
     
     Bill aBill;
     
@@ -137,6 +139,10 @@ public class AddOrder extends javax.swing.JPanel {
         ((DefaultTableModel)tblCart.getModel()).setRowCount(0);
         aTotal = 0;
         discount = 0;
+        cash = 0;
+        change = 0;
+        txtCash.setText("");
+        txtChange.setText("");
         txtCartTotal.setText("");
         lbCartDisCount.setText("");
         aBill = null;
@@ -181,6 +187,29 @@ public class AddOrder extends javax.swing.JPanel {
         txtCartTotal.setText(new DecimalFormat(",###.00").format(aTotal));
     }
     
+    public void calculateCash() {
+        if(!txtCash.getText().isBlank()&&isNumber(removeCommas(txtCash.getText()))) {
+            cash = 0;
+            change = 0;
+            double acash = Double.parseDouble(removeCommas(txtCash.getText()));
+            
+            double aChange = acash - aTotal;
+            if(aChange >= 0) {
+                cash = acash;
+                aChange = Double.parseDouble(new DecimalFormat("#.00").format(aChange));
+                change = aChange;
+                
+                txtChange.setText(new DecimalFormat(",###.00").format(change));
+            }else{
+                JOptionPane.showMessageDialog(CartPane, "cash not enough", "Info", JOptionPane.INFORMATION_MESSAGE);
+                txtChange.setText("");
+            }
+        }else{
+            JOptionPane.showMessageDialog(CartPane, "cash not enough", "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+       
+    }
+    
     
     private void processOrder() {
         
@@ -208,7 +237,7 @@ public class AddOrder extends javax.swing.JPanel {
             
         }
         
-        aBill = new Bill(mem, emm, aGame, amount, date, aTotal, discount);
+        aBill = new Bill(mem, emm, aGame, amount, date, aTotal, discount, cash, change);
         
 
         new BillDA().addBill(aBill);
@@ -264,6 +293,19 @@ public class AddOrder extends javax.swing.JPanel {
             return false;
         }
     }
+    
+    private boolean isDouble(String str) {
+        if(str.matches("\\d+(\\.\\d+)?")) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    private String removeCommas(String str) {
+        String result = str.replace(",", "");
+        return result;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -293,6 +335,10 @@ public class AddOrder extends javax.swing.JPanel {
         lbCartTotal = new javax.swing.JLabel();
         lbCartMemCheck = new javax.swing.JLabel();
         lbCartDisCount = new javax.swing.JLabel();
+        lbCash = new javax.swing.JLabel();
+        txtCash = new javax.swing.JTextField();
+        lbChange = new javax.swing.JLabel();
+        txtChange = new javax.swing.JTextField();
         DescriptionPane = new javax.swing.JPanel();
         lbDesName = new javax.swing.JLabel();
         txtDesName = new javax.swing.JTextField();
@@ -453,6 +499,22 @@ public class AddOrder extends javax.swing.JPanel {
         lbCartDisCount.setName(""); // NOI18N
         lbCartDisCount.setPreferredSize(new java.awt.Dimension(97, 28));
 
+        lbCash.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbCash.setText("Cash : ");
+
+        txtCash.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtCash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCashActionPerformed(evt);
+            }
+        });
+
+        lbChange.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbChange.setText("Change : ");
+
+        txtChange.setEditable(false);
+        txtChange.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+
         javax.swing.GroupLayout CartPaneLayout = new javax.swing.GroupLayout(CartPane);
         CartPane.setLayout(CartPaneLayout);
         CartPaneLayout.setHorizontalGroup(
@@ -495,7 +557,16 @@ public class AddOrder extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtCartTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbCartDisCount, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lbCartDisCount, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(CartPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbChange)
+                            .addComponent(lbCash))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCash, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtChange, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         CartPaneLayout.setVerticalGroup(
@@ -507,7 +578,15 @@ public class AddOrder extends javax.swing.JPanel {
                     .addComponent(lbCartTotal)
                     .addComponent(txtCartTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbCartDisCount, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48)
+                .addGap(18, 18, 18)
+                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbCash)
+                    .addComponent(txtCash, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbChange)
+                    .addComponent(txtChange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(CartPaneLayout.createSequentialGroup()
                         .addGroup(CartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -530,7 +609,7 @@ public class AddOrder extends javax.swing.JPanel {
                 .addComponent(btnCartProcess)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCartPrint)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(btnCartClear)
                 .addGap(18, 18, 18))
         );
@@ -845,7 +924,7 @@ public class AddOrder extends javax.swing.JPanel {
     }//GEN-LAST:event_txtCartMemberActionPerformed
 
     private void btnCartMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartMemberActionPerformed
-        if(txtCartMember.getText().isBlank()) {
+        if(!txtCartMember.getText().isBlank()) {
             if(new MemberDA().isMember(Integer.parseInt(txtCartMember.getText()))) {
                 lbCartMemCheck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/accept.png")));
                 setTotal();
@@ -853,12 +932,24 @@ public class AddOrder extends javax.swing.JPanel {
                 lbCartMemCheck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/remove.png")));
                 txtCartMember.setText("");
             }
+            calculateCash();
         }
+        
     }//GEN-LAST:event_btnCartMemberActionPerformed
 
     private void btnCartProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartProcessActionPerformed
         if(tblCart.getRowCount() != 0) {
-            processOrder();
+            if(isNumber(removeCommas(txtCash.getText()))) {
+                if(Double.parseDouble(removeCommas(txtCash.getText()))> aTotal) {
+                    calculateCash();
+                    processOrder();
+                    
+                }else{
+                
+                }
+            }else{
+            
+            }            
         }
     }//GEN-LAST:event_btnCartProcessActionPerformed
 
@@ -875,6 +966,10 @@ public class AddOrder extends javax.swing.JPanel {
         txtCartMember.setText("");
         lbCartMemCheck.setIcon(null);
     }//GEN-LAST:event_btnCartClearActionPerformed
+
+    private void txtCashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCashActionPerformed
+        calculateCash();
+    }//GEN-LAST:event_txtCashActionPerformed
   
     private void stockSelectionPerformed(ListSelectionEvent evt) {
         try{
@@ -921,7 +1016,9 @@ public class AddOrder extends javax.swing.JPanel {
     private javax.swing.JLabel lbCartMember;
     private javax.swing.JLabel lbCartQuantity;
     private javax.swing.JLabel lbCartTotal;
+    private javax.swing.JLabel lbCash;
     private javax.swing.JLabel lbCategory;
+    private javax.swing.JLabel lbChange;
     private javax.swing.JLabel lbDesDescription;
     private javax.swing.JLabel lbDesId;
     private javax.swing.JLabel lbDesName;
@@ -936,6 +1033,8 @@ public class AddOrder extends javax.swing.JPanel {
     private javax.swing.JTextField txtCartMember;
     private javax.swing.JTextField txtCartQuantity;
     private javax.swing.JTextField txtCartTotal;
+    private javax.swing.JTextField txtCash;
+    private javax.swing.JTextField txtChange;
     private javax.swing.JTextField txtDesId;
     private javax.swing.JTextField txtDesName;
     private javax.swing.JTextField txtDesPrice;

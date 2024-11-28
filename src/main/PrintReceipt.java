@@ -58,6 +58,9 @@ public class PrintReceipt extends javax.swing.JFrame {
          str += "Total\t\t\t"+aBill.getTotal() +"\n"+
                 "\t\t\t"+ aBill.getMember().getId()+"\n"+
                 "discount\t\t\t"+ aBill.getDiscount()+"\n\n"+
+                "cash\t\t\t"+ aBill.getCash()+"\n"+
+                "change\t\t\t"+ aBill.getCange()+"\n\n"+
+                 ""+
                 "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n"+
                 "\t ----Thank you----";
                 
@@ -83,6 +86,8 @@ public class PrintReceipt extends javax.swing.JFrame {
          str += "Total\t\t\t"+aBill.getTotal() +"\n"+
                 "\t\t\t"+ aBill.getMember().getId()+"\n"+
                 "discount\t\t\t"+ aBill.getDiscount()+"\n\n"+
+                "cash\t\t\t"+ aBill.getCash()+"\n"+
+                "change\t\t\t"+ aBill.getCange()+"\n\n"+
                 "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n"+
                 "\t ----Thank you----";
                 

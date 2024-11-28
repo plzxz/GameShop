@@ -40,6 +40,8 @@ public class BillDA {
                 java.sql.Date bilDate = rs.getDate("Dill_Date");
                 double total = rs.getDouble("Total_price");
                 double discount = rs.getDouble("Discount");
+                double cash = rs.getDouble("cash");
+                double change = rs.getDouble("change");
                 
                 do {
                     
@@ -48,7 +50,7 @@ public class BillDA {
 
                 }while(rs.next());
 
-                aBill = new Bill(mem, emp, aGame, amount, bilDate, total, discount);
+                aBill = new Bill(mem, emp, aGame, amount, bilDate, total, discount, cash, change);
             }  
 
             return aBill;
@@ -69,7 +71,7 @@ public class BillDA {
             
             int orderID = 0;
 
-            String billSql = "INSERT INTO Bill (EMP_ID, C_ID, Dill_Date, Total_price, Discount) VALUES (?, ?, ?, ?, ?)";
+            String billSql = "INSERT INTO Bill (EMP_ID, C_ID, Dill_Date, Total_price, Discount, cash, change) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             try(PreparedStatement oStmt = conn.prepareStatement(billSql,PreparedStatement.RETURN_GENERATED_KEYS)) {
 
@@ -78,6 +80,8 @@ public class BillDA {
                 oStmt.setDate(3, aBill.getDate());
                 oStmt.setDouble(4, aBill.getTotal());
                 oStmt.setDouble(5, aBill.getDiscount());
+                oStmt.setDouble(6, aBill.getCash());
+                oStmt.setDouble( 7, aBill.getCange());
                 
                 oStmt.executeUpdate();
                 

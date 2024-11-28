@@ -22,7 +22,7 @@ public class Bill {
     private Date date;
     private double total;
     private double discount;
-    private double pay;
+    private double cash;
     private double change;
     
     public Bill() {
@@ -30,7 +30,7 @@ public class Bill {
     }
     
     
-    public Bill(Member member, Employee employee, ArrayList<Game> game, ArrayList<Integer> amount, Date date, double total, double discount) {
+    public Bill(Member member, Employee employee, ArrayList<Game> game, ArrayList<Integer> amount, Date date, double total, double discount, double cash, double change) {
         setMember(member);
         setEmployee(employee);
         setGame(game);
@@ -38,6 +38,8 @@ public class Bill {
         setDate(date);
         setTotal(total);
         setDiscount(discount);
+        setCash(cash);
+        setChange(change);
     }
     
     
@@ -103,6 +105,22 @@ public class Bill {
     
     public void setDiscount(double discount) {
         this.discount = discount;
+    }
+    
+    public double getCash() {
+        return cash;
+    }
+    
+    public void setCash(double cash) {
+        this.cash = cash;
+    }
+    
+    public double getCange() {
+        return change;
+    }
+    
+    public void setChange(double change) {
+        this.change = change;
     }
     
 }
